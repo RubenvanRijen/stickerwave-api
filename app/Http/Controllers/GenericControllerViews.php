@@ -3,14 +3,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Str;
 
 abstract class GenericControllerViews extends Controller
 {
@@ -19,7 +17,7 @@ abstract class GenericControllerViews extends Controller
      * Do not add the type model cause then you can't make it work. This because you will get an error on the type when another controller uses this generic controller.
      * @var Model
      */
-    protected $model;
+    protected Model $model;
 
     /**
      * Constructor to inject the model into the controller.
@@ -113,9 +111,9 @@ abstract class GenericControllerViews extends Controller
      * Remove the specified resource from storage.
      *
      * @param mixed $id
-     * @return JsonResponse
+     * @return JsonResponse|RedirectResponse
      */
-    public function destroy(mixed $id): JsonResponse
+    public function destroy(mixed $id): JsonResponse|RedirectResponse
     {
         // Find the item by ID
         $item = $this->model->find($id);
@@ -181,6 +179,6 @@ abstract class GenericControllerViews extends Controller
      */
     protected function getModelNamePlural(): string
     {
-        return str_plural($this->getModelName());
+        return Str::plural($this->getModelName(), '2');
     }
 }
