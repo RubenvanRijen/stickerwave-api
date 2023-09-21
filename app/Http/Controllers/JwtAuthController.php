@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Cookie;
+
 
 class JwtAuthController extends Controller
 {
@@ -51,9 +53,8 @@ class JwtAuthController extends Controller
             return response()->json(['error' => 'Email not verified'], 403);
         }
 
-        // Refresh the token and return a new token
-        $token = auth()->refresh();
-        return $this->createNewToken($token);
+        // Refresh the token and return a new token with cookie
+        return $this->refresh();
     }
 
     /**
@@ -104,6 +105,7 @@ class JwtAuthController extends Controller
     {
         // Refresh the token and return a new token
         $token = auth()->refresh();
+
         return $this->createNewToken($token);
     }
 
@@ -121,7 +123,7 @@ class JwtAuthController extends Controller
         }
 
         // Return the user's information
-        return response()->json(compact('user'));
+        return response()->json($user);
     }
 
     /**
@@ -131,7 +133,8 @@ class JwtAuthController extends Controller
     public function sendEmailVerification(Request $request): JsonResponse
     {
         // Get the authenticated user
-        $user = User::where('email', $request->input('email'))->first();
+        $user = new User();
+        $user = $user->where('email', $request->input('email'))->first();
 
         if ($user->hasVerifiedEmail()) {
             // Return message if email is already verified
@@ -152,7 +155,8 @@ class JwtAuthController extends Controller
      */
     public function createNewVerificationLink(Request $request): JsonResponse
     {
-        $user = User::where('email', $request->input('email'))->first();
+        $user = new User();
+        $user = $user->where('email', $request->input('email'))->first();
 
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
@@ -174,7 +178,8 @@ class JwtAuthController extends Controller
     public function verifyEmail(Request $request): JsonResponse
     {
         // Find the user by the verification token
-        $user = User::where('verification_token', $request->verification_token)->first();
+        $user = new User();
+        $user = $user->where('verification_token', $request->verification_token)->first();
 
         if (!$user) {
             // Return error if the token is invalid
@@ -196,13 +201,15 @@ class JwtAuthController extends Controller
      */
     protected function createNewToken(string $token): JsonResponse
     {
+        // Set a cookie
+        $cookie = Cookie::make('jwt_token', $token, 60); // 60 minutes
         // Create a new token response with necessary metadata
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,
             'user' => auth()->user()
-        ]);
+        ])->withCookie($cookie);
     }
 
     /**
@@ -213,8 +220,9 @@ class JwtAuthController extends Controller
     {
         // Generate a signed route URL for email verification
         return URL::temporarySignedRoute(
-            'verification.verify', now()->addMinutes(30), ['verification_token' => $user->verification_token]);
-
+            'verification.verify',
+            now()->addMinutes(30),
+            ['verification_token' => $user->verification_token]
+        );
     }
 }
-

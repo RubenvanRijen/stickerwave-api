@@ -32,6 +32,4 @@ Route::group([
     Route::post('/send-verify-email', [JwtAuthController::class, 'sendEmailVerification']);
     Route::post('/resend-verification', [JwtAuthController::class, 'createNewVerificationLink']);
     Route::post('/verify-email/{verification_token}', [JwtAuthController::class, 'verifyEmail'])->name('verification.verify');
-    
 });
-
