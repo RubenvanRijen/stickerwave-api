@@ -15,21 +15,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//    return view('welcome');
-//});
+Route::middleware('jwt')->prefix('auth')->group(
+    function ($router) {
+        Route::post('/login', [JwtAuthController::class, 'login']);
+        Route::post('/register', [JwtAuthController::class, 'register']);
+        Route::post('/logout', [JwtAuthController::class, 'logout']);
+        Route::post('/refresh', [JwtAuthController::class, 'refresh']);
+        Route::get('/user-profile', [JwtAuthController::class, 'getCurrentUser']);
 
-Route::group([
-    'middleware' => 'api',
-    'prefix' => 'auth'
-], function ($router) {
-    Route::post('/login', [JwtAuthController::class, 'login']);
-    Route::post('/register', [JwtAuthController::class, 'register']);
-    Route::post('/logout', [JwtAuthController::class, 'logout']);
-    Route::post('/refresh', [JwtAuthController::class, 'refresh']);
-    Route::get('/user-profile', [JwtAuthController::class, 'getCurrentUser']);
-
-    Route::post('/send-verify-email', [JwtAuthController::class, 'sendEmailVerification']);
-    Route::post('/resend-verification', [JwtAuthController::class, 'createNewVerificationLink']);
-    Route::post('/verify-email/{verification_token}', [JwtAuthController::class, 'verifyEmail'])->name('verification.verify');
-});
+        Route::post('/send-verify-email', [JwtAuthController::class, 'sendEmailVerification']);
+        Route::post('/resend-verification', [JwtAuthController::class, 'createNewVerificationLink']);
+        Route::post('/verify-email/{verification_token}', [JwtAuthController::class, 'verifyEmail'])->name('verification.verify');
+    }
+);

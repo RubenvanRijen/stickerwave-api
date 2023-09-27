@@ -17,8 +17,8 @@ class JwtAuthController extends Controller
 {
     public function __construct()
     {
-        // Apply the 'auth:api' middleware to all methods except the beneath
-        $this->middleware('auth:api', ['except' => ['login', 'register', 'sendEmailVerification', 'verifyEmail', 'createNewVerificationLink']]);
+        // Apply the 'auth:jwt' middleware to all methods except the beneath
+        $this->middleware('jwt', ['except' => ['login', 'register', 'sendEmailVerification', 'verifyEmail', 'createNewVerificationLink']]);
     }
 
     /**
@@ -202,12 +202,12 @@ class JwtAuthController extends Controller
     protected function createNewToken(string $token): JsonResponse
     {
         // Set a cookie
-        $cookie = Cookie::make('jwt_token', $token, 60); // 60 minutes
+        $cookie = Cookie::make('jwt_token', $token, 2); // 60 minutes
         // Create a new token response with necessary metadata
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
+            'expires_in' => auth()->factory()->getTTL() * 1,
             'user' => auth()->user()
         ])->withCookie($cookie);
     }
