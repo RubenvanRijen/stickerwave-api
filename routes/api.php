@@ -15,13 +15,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('jwt')->prefix('auth')->group(
+Route::prefix('auth')->group(
     function ($router) {
         Route::post('/login', [JwtAuthController::class, 'login']);
         Route::post('/register', [JwtAuthController::class, 'register']);
-        Route::post('/logout', [JwtAuthController::class, 'logout']);
-        Route::post('/refresh', [JwtAuthController::class, 'refresh']);
-        Route::get('/user-profile', [JwtAuthController::class, 'getCurrentUser']);
+        Route::post('/logout', [JwtAuthController::class, 'logout'])->middleware('jwt');
+        Route::post('/refresh', [JwtAuthController::class, 'refresh'])->middleware('jwt');
+        Route::get('/user-profile', [JwtAuthController::class, 'getCurrentUser'])->middleware('jwt');
 
         Route::post('/send-verify-email', [JwtAuthController::class, 'sendEmailVerification']);
         Route::post('/resend-verification', [JwtAuthController::class, 'createNewVerificationLink']);

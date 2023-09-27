@@ -17,8 +17,6 @@ class JwtAuthController extends Controller
 {
     public function __construct()
     {
-        // Apply the 'auth:jwt' middleware to all methods except the beneath
-        $this->middleware('jwt', ['except' => ['login', 'register', 'sendEmailVerification', 'verifyEmail', 'createNewVerificationLink']]);
     }
 
     /**
