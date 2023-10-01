@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Cookie;
-use Tymon\JWTAuth\Facades\JWTAuth;
-
+use App\Mail\VerifyEmail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
 
 class JwtAuthController extends Controller
 {
@@ -39,8 +39,10 @@ class JwtAuthController extends Controller
 
         // Attempt to authenticate user
         $credentials = $request->only('email', 'password');
-
-        if (!Auth::attempt($credentials)) {
+        $token = auth()->attempt($credentials);
+        if (!$token) {
+            //logout the user if the email is not verified
+            auth()->logout();
             // Return error for invalid credentials
             return response()->json(['error' => 'Invalid credentials'], 401);
         }
@@ -53,7 +55,6 @@ class JwtAuthController extends Controller
         }
 
         // create the token and return a response with token and cookie
-        $token = $this->createToken($request);
         return $this->createTokenResponse($token, "Successfully logged in", 200);
     }
 
@@ -82,18 +83,11 @@ class JwtAuthController extends Controller
             ['password' => bcrypt($request->password)]
         ));
         $user->verification_token = Str::random(40);
-        // set the users email straight to verified, should not be done.
-        // But to speed up the progress of this project this has been set.
-        $user->email_verified_at = now();
-        $user->verification_token = null;
 
         $user->save();
 
-        //for now add this code so that the user is automatically logged in
-        // create the token and return a response with token and cookie
-        $token = $this->createToken($request);
         // Return success response with registered user information
-        return $this->createTokenResponse($token, "User successfully made", 201);
+        return response()->json(['message' => 'User successfully registered', 'user' => $user], 201);
     }
 
     /**
@@ -106,13 +100,15 @@ class JwtAuthController extends Controller
         return response()->json(['message' => 'User logged out successfully']);
     }
 
+
     /**
-     * @return JsonResponse|String
+     * @param Request $request
+     * @return string|JsonResponse
      */
-    private function createToken(Request $request)
+    private function createToken(Request $request): string|JsonResponse
     {
         $credentials = $request->only('email', 'password');
-        $token = JWTAuth::attempt($credentials);
+        $token = auth()->attempt($credentials);
         if (!$token) {
             return response()->json(['error' => 'Invalid credentials'], 401);
         }
@@ -157,16 +153,21 @@ class JwtAuthController extends Controller
         $user = new User();
         $user = $user->where('email', $request->input('email'))->first();
 
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
         if ($user->hasVerifiedEmail()) {
             // Return message if email is already verified
-            return response()->json(['message' => 'Email is already verified'], 200);
+            return response()->json(['message' => 'Email has already been verified'], 200);
         }
 
         // Generate the verification link
-        $verificationUrl = $this->generateVerificationUrl($user);
+        $verificationUrl = $this->generateVerificationUrl($user, $request->redirect_url);
+        Mail::to($user->email)->send(new VerifyEmail($verificationUrl));
 
         // Return success response
-        return response()->json(['url' => $verificationUrl]);
+        return response()->json(['url' => $verificationUrl], 200);
     }
 
 
@@ -177,7 +178,7 @@ class JwtAuthController extends Controller
     public function createNewVerificationLink(Request $request): JsonResponse
     {
         $user = new User();
-        $user = $user->where('email', $request->input('email'))->first();
+        $user = $user->where('verification_token', $request->verification_token)->first();
 
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
@@ -187,16 +188,17 @@ class JwtAuthController extends Controller
         $user->save();
 
         // generate a new verification url
-        $verificationUrl = $this->generateVerificationUrl($user);
+        $verificationUrl = $this->generateVerificationUrl($user, $request->redirect_url);
+        Mail::to($user->email)->send(new VerifyEmail($verificationUrl));
 
-        return response()->json(['url' => $verificationUrl]);
+        // Return success response
+        return response()->json(['url' => $verificationUrl], 200);
     }
 
     /**
      * @param Request $request
-     * @return JsonResponse
      */
-    public function verifyEmail(Request $request): JsonResponse
+    public function verifyEmail(Request $request)
     {
         // Find the user by the verification token
         $user = new User();
@@ -207,13 +209,17 @@ class JwtAuthController extends Controller
             return response()->json(['message' => 'Invalid verification token'], 400);
         }
 
+        if (!$request->hasValidSignature()) {
+            $this->createNewVerificationLink($request);
+        }
+
         // Mark the user's email as verified and clear the verification token
         $user->email_verified_at = now();
         $user->verification_token = null;
         $user->save();
 
-        // Return success response
-        return response()->json(['message' => 'Email verified successfully']);
+        // Return success response and redirect
+        return redirect(urldecode($request->redirect_url))->with(['message' => 'Email verified successfully'], 200);
     }
 
     /**
@@ -238,13 +244,13 @@ class JwtAuthController extends Controller
      * @param User $user
      * @return string
      */
-    protected function generateVerificationUrl(User $user): string
+    protected function generateVerificationUrl(User $user, string $url): string
     {
         // Generate a signed route URL for email verification
         return URL::temporarySignedRoute(
-            'verification.verify',
-            now()->addMinutes(30),
-            ['verification_token' => $user->verification_token]
+            'verification.verify.api',
+            now()->addMinutes(60),
+            ['verification_token' => $user->verification_token, 'redirect_url' => $url]
         );
     }
 }

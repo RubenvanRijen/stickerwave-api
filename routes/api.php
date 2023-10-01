@@ -25,6 +25,8 @@ Route::prefix('auth')->group(
 
         Route::post('/send-verify-email', [JwtAuthController::class, 'sendEmailVerification']);
         Route::post('/resend-verification', [JwtAuthController::class, 'createNewVerificationLink']);
-        Route::post('/verify-email/{verification_token}', [JwtAuthController::class, 'verifyEmail'])->name('verification.verify');
+        // set the where cause otherwise there kept being a problem with the url not being well seen by laravel.
+        // now laravel properly sees the verification_token and the redirect_url and makes it one good route.
+        Route::get('/verify-email/{verification_token}/{redirect_url}', [JwtAuthController::class, 'verifyEmail'])->name('verification.verify.api')->where('redirect_url', '.*');
     }
 );
