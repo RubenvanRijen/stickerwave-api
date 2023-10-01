@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Cookie;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 
 class JwtAuthController extends Controller
@@ -51,8 +52,9 @@ class JwtAuthController extends Controller
             return response()->json(['error' => 'Email not verified'], 403);
         }
 
-        // Refresh the token and return a new token with cookie
-        return $this->refresh();
+        // create the token and return a response with token and cookie
+        $token = $this->createToken($request);
+        return $this->createTokenResponse($token, "Successfully logged in", 200);
     }
 
     /**
@@ -80,10 +82,18 @@ class JwtAuthController extends Controller
             ['password' => bcrypt($request->password)]
         ));
         $user->verification_token = Str::random(40);
+        // set the users email straight to verified, should not be done.
+        // But to speed up the progress of this project this has been set.
+        $user->email_verified_at = now();
+        $user->verification_token = null;
+
         $user->save();
 
+        //for now add this code so that the user is automatically logged in
+        // create the token and return a response with token and cookie
+        $token = $this->createToken($request);
         // Return success response with registered user information
-        return response()->json(['message' => 'User successfully registered', 'user' => $user], 201);
+        return $this->createTokenResponse($token, "User successfully made", 201);
     }
 
     /**
@@ -97,6 +107,19 @@ class JwtAuthController extends Controller
     }
 
     /**
+     * @return JsonResponse|String
+     */
+    private function createToken(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+        $token = JWTAuth::attempt($credentials);
+        if (!$token) {
+            return response()->json(['error' => 'Invalid credentials'], 401);
+        }
+        return $token;
+    }
+
+    /**
      * @return JsonResponse
      */
     public function refresh(): JsonResponse
@@ -104,7 +127,7 @@ class JwtAuthController extends Controller
         // Refresh the token and return a new token
         $token = auth()->refresh();
 
-        return $this->createNewToken($token);
+        return $this->createTokenResponse($token, "Refreshed the token successfully", 200);
     }
 
     /**
@@ -197,17 +220,18 @@ class JwtAuthController extends Controller
      * @param string $token
      * @return JsonResponse
      */
-    protected function createNewToken(string $token): JsonResponse
+    protected function createTokenResponse(string $token, string $message = "", int $responseCode): JsonResponse
     {
         // Set a cookie
-        $cookie = Cookie::make('jwt_token', $token, 2); // 60 minutes
+        $cookie = Cookie::make('jwt_token', $token, 60); // 60 minutes
         // Create a new token response with necessary metadata
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 1,
-            'user' => auth()->user()
-        ])->withCookie($cookie);
+            'expires_in' => auth()->factory()->getTTL() * 60,
+            'user' => auth()->user(),
+            'message' => $message
+        ], $responseCode)->withCookie($cookie);
     }
 
     /**
