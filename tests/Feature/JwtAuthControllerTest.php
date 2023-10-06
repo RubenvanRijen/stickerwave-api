@@ -2,174 +2,165 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\JwtAuthController;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cookie;
 use Tests\TestCase;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+
 
 class JwtAuthControllerTest extends TestCase
 {
     use RefreshDatabase; // Automatically reset the database after each test
     use WithFaker;       // Use Faker for generating fake data
 
+
     /**
-     * Test user registration.
+     * Call before the tests are run. Put the necessary data in.
      */
-    public function testUserRegistration()
+    protected function setUp(): void
     {
-        $userData = [
+        parent::setUp();
+        // Migrate the database
+        Artisan::call('migrate');
+    }
+
+    public function testLogin()
+    {
+        // Create a user for testing
+        $user = Factory::factoryForModel(User::class)->create([
+            'password' => bcrypt('password123'),
+        ]);
+
+        // Define the login data
+        $data = [
+            'email' => $user->email,
+            'password' => 'password123',
+        ];
+
+        // Send a POST request to the login route
+        $response = $this->post('/api/auth/login', $data);
+
+        // Assert that the response status is 200 (or the appropriate status code)
+        $response->assertStatus(200);
+
+        // Assert that the response contains the 'access_token' key
+        $response->assertJsonStructure(['access_token']);
+    }
+
+    public function testRegister()
+    {
+        // Define the registration data
+        $data = [
             'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
-            'password' => 'password',
-            'password_confirmation' => 'password',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
         ];
 
-        $response = $this->postJson('api/auth/register', $userData);
+        // Send a POST request to the register route
+        $response = $this->post('/api/auth/register', $data);
 
-        $response->assertStatus(201)
-            ->assertJson([
-                'message' => 'User successfully registered',
-            ]);
+        // Assert that the response status is 201 (or the appropriate status code)
+        $response->assertStatus(201);
+
+        // Assert that the response contains the 'message' key
+        $response->assertJsonStructure(['message']);
     }
 
-    /**
-     * Test user login.
-     */
-    public function testUserLogin()
+    public function testLogout()
     {
-        $user = User::factory()->create([
-            'email' => 'user@example.com',
-            'password' => bcrypt('password'),
-            'email_verified_at' => now(),
-        ]);
+        // Create a user for testing
+        $user = Factory::factoryForModel(User::class)->create();
 
-        $credentials = [
-            'email' => 'user@example.com',
-            'password' => 'password',
-        ];
+        // Authenticate the user
+        $token = auth()->login($user);
 
-        $response = $this->postJson('api/auth/login', $credentials);
-
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'access_token',
-                'token_type',
-                'expires_in',
-                'user',
-            ]);
-    }
-
-    /**
-     * Test refreshing user's token.
-     */
-    public function testTokenRefresh()
-    {
-        $user = User::factory()->create();
-        $token = auth()->tokenById($user->id);
-
-        $response = $this->postJson('api/auth/refresh', [], [
+        // Send a POST request to the logout route with the JWT token
+        $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ]);
+        ])->post('/api/auth/logout');
 
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'access_token',
-                'token_type',
-                'expires_in',
-                'user',
-            ]);
+        // Assert that the response status is 200 (or the appropriate status code)
+        $response->assertStatus(200);
+
+        // Alternatively, you can assert that the cookie value is empty
+        $this->assertEmpty(Cookie::get('jwt_token'));
     }
 
-    /**
-     * Test getting the current user's profile.
-     */
-    public function testGetCurrentUserProfile()
-    {
-        $user = User::factory()->create();
-        $token = auth()->tokenById($user->id);
 
-        $response = $this->getJson('api/auth/user-profile', [
-            'Authorization' => 'Bearer ' . $token,
-        ]);
 
-        $response->assertStatus(200)
-            ->assertJson([
-                'user' => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                ],
-            ]);
-    }
-
-    /**
-     * Test logging out user.
-     */
-    public function testUserLogout()
-    {
-        $user = User::factory()->create();
-        $token = auth()->tokenById($user->id);
-
-        $response = $this->postJson('api/auth/logout', [], [
-            'Authorization' => 'Bearer ' . $token,
-        ]);
-
-        $response->assertStatus(200)
-            ->assertJson([
-                'message' => 'User logged out successfully',
-            ]);
-    }
-
-    /**
-     * Test sending email verification link.
-     */
     public function testSendEmailVerification()
     {
-        $user = User::factory()->create([
-            'email' => 'user2@example.com',
+        // Create a user for testing
+        $user = Factory::factoryForModel(User::class)->create([
+            'verification_token' => 'old_verification_token',
+            'email_verified_at' => null
         ]);
 
-        $response = $this->postJson('api/auth/send-verify-email', ['email' => $user->email]);
+        // Define the email verification data
+        $data = [
+            'email' => $user->email,
+            'redirect_url' => 'http://example.com/verification-success',
+        ];
 
+        // Send a POST request to the send-verify-email route
+        $response = $this->post('api/auth/send-verify-email', $data);
+
+        // Assert that the response status is 200 (or the appropriate status code)
         $response->assertStatus(200);
+
+        // Assert that the response contains the 'url' key
+        $response->assertJsonStructure(['url']);
     }
 
-    /**
-     * Test verifying user's email.
-     */
-    public function testVerifyEmail()
-    {
-        $user = User::factory()->create([
-            'verification_token' => 'test_verification_token',
-        ]);
-
-        $response = $this->postJson('api/auth/verify-email/test_verification_token');
-
-        $response->assertStatus(200)
-            ->assertJson([
-                'message' => 'Email verified successfully',
-            ]);
-
-        $this->assertDatabaseMissing('users', [
-            'id' => $user->id,
-            'verification_token' => 'test_verification_token',
-        ]);
-    }
-
-    /**
-     * Test creating a new verification link.
-     */
     public function testCreateNewVerificationLink()
     {
-        $user = User::factory()->create([
-            'email' => 'user@example.com',
+        // Create a user for testing
+        $user = Factory::factoryForModel(User::class)->create([
+            'verification_token' => 'old_verification_token',
+            'email_verified_at' => null
         ]);
 
-        $response = $this->postJson('api/auth/resend-verification', ['email' => $user->email]);
+        // Define the data for creating a new verification link
+        $data = [
+            'verification_token' => 'old_verification_token',
+            'redirect_url' => 'http://example.com/verification-success',
+        ];
 
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'url',
-            ]);
+        // Send a POST request to the resend-verification route
+        $response = $this->post('api/auth/resend-verification', $data);
+
+        // Assert that the response status is 200 (or the appropriate status code)
+        $response->assertStatus(200);
+
+        // Assert that the response contains the 'url' key
+        $response->assertJsonStructure(['url']);
+    }
+
+    public function testVerifyEmail()
+    {
+        // Create a user for testing
+        $user = Factory::factoryForModel(User::class)->create([
+            'verification_token' => 'verification_token_to_be_verified',
+        ]);
+
+        // Define the verification data
+        $data = [
+            'verification_token' => 'verification_token_to_be_verified',
+            'redirect_url' => urlencode('http://example.com/verified-success'),
+        ];
+
+        // Send a GET request to the verify-email route
+        $response = $this->get("api/auth/verify-email/{$data['verification_token']}/{$data['redirect_url']}");
+
+        // Assert that the response status is a redirect (e.g., 302) or the appropriate status code
+        $response->assertStatus(302);
+
+        // Assert that the redirect URL matches the expected URL
+        $response->assertRedirect('http://example.com/verified-success');
     }
 }

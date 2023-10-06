@@ -97,7 +97,7 @@ class JwtAuthController extends Controller
     {
         // Logout the authenticated user
         auth()->logout();
-        return response()->json(['message' => 'User logged out successfully']);
+        return response()->json(['message' => 'User logged out successfully'])->withCookie(Cookie::forget('jwt_token'));
     }
 
 
