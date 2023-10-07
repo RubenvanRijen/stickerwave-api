@@ -44,8 +44,6 @@ class JwtAuthController extends Controller implements JwtAuthInterface
         $credentials = $request->only('email', 'password');
         $token = auth()->attempt($credentials);
         if (!$token) {
-            //logout the user if the email is not verified
-            auth()->logout();
             // Return error for invalid credentials
             return response()->json(['error' => 'Invalid credentials'], 401);
         }
@@ -232,12 +230,12 @@ class JwtAuthController extends Controller implements JwtAuthInterface
     protected function createTokenResponse(string $token, string $message = "", int $responseCode): JsonResponse
     {
         // Set a cookie
-        $cookie = Cookie::make('jwt_token', $token, 60); // 60 minutes
+        $cookie = Cookie::make('jwt_token', $token, 1); // 60 minutes
         // Create a new token response with necessary metadata
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
+            'expires_in' => auth()->factory()->getTTL() * 1,
             'user' => auth()->user(),
             'message' => $message
         ], $responseCode)->withCookie($cookie);

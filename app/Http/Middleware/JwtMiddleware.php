@@ -36,6 +36,8 @@ class JwtMiddleware
             return response()->json(['error' => 'Token invalid'], 401);
         } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
             return response()->json(['error' => 'Token absent'], 401);
+        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+            return response()->json(['error' => 'Token could not be parsed from the request'], 401);
         }
 
         return $next($request);
