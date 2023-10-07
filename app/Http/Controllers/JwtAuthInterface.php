@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
  *     name="Authentication",
  *     description="Endpoints for user authentication and authorization"
  * )
+ * the interace for the JwtAuthController. Store the documentation here.
  */
 interface JwtAuthInterface
 {
