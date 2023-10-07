@@ -230,12 +230,12 @@ class JwtAuthController extends Controller implements JwtAuthInterface
     protected function createTokenResponse(string $token, string $message = "", int $responseCode): JsonResponse
     {
         // Set a cookie
-        $cookie = Cookie::make('jwt_token', $token, 1); // 60 minutes
+        $cookie = Cookie::make('jwt_token', $token, 60); // 60 minutes
         // Create a new token response with necessary metadata
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 1,
+            'expires_in' => auth('jwt')->factory()->getTTL() * 60,
             'user' => auth()->user(),
             'message' => $message
         ], $responseCode)->withCookie($cookie);

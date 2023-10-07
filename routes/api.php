@@ -19,10 +19,6 @@ Route::prefix('auth')->group(
     function ($router) {
         Route::post('/login', [JwtAuthController::class, 'login']);
         Route::post('/register', [JwtAuthController::class, 'register']);
-        Route::post('/logout', [JwtAuthController::class, 'logout'])->middleware('jwt');
-        Route::post('/refresh', [JwtAuthController::class, 'refresh'])->middleware('jwt');
-        Route::get('/user-profile', [JwtAuthController::class, 'getCurrentUser'])->middleware('jwt');
-
         Route::post('/send-verify-email', [JwtAuthController::class, 'sendEmailVerification']);
         Route::post('/resend-verification', [JwtAuthController::class, 'createNewVerificationLink']);
         // set the where cause otherwise there kept being a problem with the url not being well seen by laravel.
@@ -30,3 +26,10 @@ Route::prefix('auth')->group(
         Route::get('/verify-email/{verification_token}/{redirect_url}', [JwtAuthController::class, 'verifyEmail'])->name('verification.verify.api')->where('redirect_url', '.*');
     }
 );
+
+
+Route::prefix('auth')->middleware(['jwt', 'api'])->group(function ($router) {
+    Route::post('/logout', [JwtAuthController::class, 'logout']);
+    Route::post('/refresh', [JwtAuthController::class, 'refresh']);
+    Route::get('/user-profile', [JwtAuthController::class, 'getCurrentUser']);
+});
