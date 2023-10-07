@@ -12,10 +12,13 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Cookie;
 use App\Mail\VerifyEmail;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Redirect;
 
-class JwtAuthController extends Controller
+
+class JwtAuthController extends Controller implements JwtAuthInterface
 {
+    /**
+     * Constructor
+     */
     public function __construct()
     {
     }
@@ -159,7 +162,7 @@ class JwtAuthController extends Controller
 
         if ($user->hasVerifiedEmail()) {
             // Return message if email is already verified
-            return response()->json(['message' => 'Email has already been verified'], 200);
+            return response()->json(['message' => 'Email has already been verified'], 409);
         }
 
         // Generate the verification link
