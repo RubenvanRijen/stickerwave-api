@@ -28,7 +28,7 @@ Route::prefix('auth')->group(
 );
 
 
-Route::prefix('auth')->middleware(['jwt', 'api'])->group(function ($router) {
+Route::prefix('auth')->middleware(['jwt'])->group(function ($router) {
     Route::post('/logout', [JwtAuthController::class, 'logout']);
     Route::post('/refresh', [JwtAuthController::class, 'refresh']);
     Route::get('/user-profile', [JwtAuthController::class, 'getCurrentUser']);

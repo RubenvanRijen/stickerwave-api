@@ -77,7 +77,7 @@ class JwtAuthControllerTest extends TestCase
         $user = Factory::factoryForModel(User::class)->create();
 
         // Authenticate the user
-        $token = auth()->login($user);
+        $token = auth('api')->login($user);
 
         // Send a POST request to the logout route with the JWT token
         $response = $this->withHeaders([

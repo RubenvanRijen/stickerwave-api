@@ -42,13 +42,13 @@ class JwtAuthController extends Controller implements JwtAuthInterface
 
         // Attempt to authenticate user
         $credentials = $request->only('email', 'password');
-        $token = auth()->attempt($credentials);
+        $token = auth('api')->attempt($credentials);
         if (!$token) {
             // Return error for invalid credentials
             return response()->json(['error' => 'Invalid credentials'], 401);
         }
 
-        $user = auth()->user();
+        $user = auth('api')->user();
 
         if (!$user->email_verified_at) {
             // Return error if user's email is not verified
@@ -97,7 +97,7 @@ class JwtAuthController extends Controller implements JwtAuthInterface
     public function logout(): JsonResponse
     {
         // Logout the authenticated user
-        auth()->logout();
+        auth('api')->logout();
         return response()->json(['message' => 'User logged out successfully'])->withCookie(Cookie::forget('jwt_token'));
     }
 
@@ -109,7 +109,7 @@ class JwtAuthController extends Controller implements JwtAuthInterface
     private function createToken(Request $request): string|JsonResponse
     {
         $credentials = $request->only('email', 'password');
-        $token = auth()->attempt($credentials);
+        $token = auth('api')->attempt($credentials);
         if (!$token) {
             return response()->json(['error' => 'Invalid credentials'], 401);
         }
@@ -122,7 +122,7 @@ class JwtAuthController extends Controller implements JwtAuthInterface
     public function refresh(): JsonResponse
     {
         // Refresh the token and return a new token
-        $token = auth()->refresh();
+        $token = auth('api')->refresh();
 
         return $this->createTokenResponse($token, "Refreshed the token successfully", 200);
     }
@@ -133,7 +133,7 @@ class JwtAuthController extends Controller implements JwtAuthInterface
     public function getCurrentUser(): JsonResponse
     {
         // Get the authenticated user's information
-        $user = auth()->user();
+        $user = auth('api')->user();
 
         if (!$user) {
             // Return error if user is not authenticated
@@ -235,8 +235,8 @@ class JwtAuthController extends Controller implements JwtAuthInterface
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('jwt')->factory()->getTTL() * 60,
-            'user' => auth()->user(),
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'user' => auth('api')->user(),
             'message' => $message
         ], $responseCode)->withCookie($cookie);
     }
