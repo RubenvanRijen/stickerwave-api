@@ -122,7 +122,7 @@ class JwtAuthController extends Controller implements JwtAuthInterface
     public function refresh(): JsonResponse
     {
         // Refresh the token and return a new token
-        $token = auth('api')->refresh();
+        $token = auth()->refresh();
 
         return $this->createTokenResponse($token, "Refreshed the token successfully", 200);
     }
