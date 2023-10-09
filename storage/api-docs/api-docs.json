@@ -16,13 +16,410 @@
                 }
             }
         },
+        "/categories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get a list of categories",
+                "operationId": "getCategories",
+                "responses": {
+                    "200": {
+                        "description": "List of categories",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "title": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Store a newly created category in the database",
+                "operationId": "storeCategory",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "description": "Category title",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Category created successfully"
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/categories/{id}": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Show the specified category by ID",
+                "operationId": "getCategoryById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the category",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Update the specified category by ID",
+                "operationId": "updateCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the category",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "description": "Category title",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Category updated successfully"
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Remove the specified category by ID",
+                "operationId": "deleteCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the category",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category deleted successfully"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            }
+        },
+        "/stickers/{stickerId}/images": {
+            "get": {
+                "tags": [
+                    "Images"
+                ],
+                "summary": "Get a list of images associated with a specific sticker",
+                "operationId": "getImages",
+                "parameters": [
+                    {
+                        "name": "stickerId",
+                        "in": "path",
+                        "description": "ID of the sticker",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of images",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "filename": {
+                                                "type": "string"
+                                            },
+                                            "mime": {
+                                                "type": "string"
+                                            },
+                                            "data": {
+                                                "type": "string"
+                                            },
+                                            "sticker_id": {
+                                                "type": "integer"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Image not found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Images"
+                ],
+                "summary": "Store a newly created image for a specific sticker in the database",
+                "operationId": "storeImage",
+                "parameters": [
+                    {
+                        "name": "stickerId",
+                        "in": "path",
+                        "description": "ID of the sticker",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "filename",
+                                    "mime",
+                                    "data"
+                                ],
+                                "properties": {
+                                    "filename": {
+                                        "description": "Image filename",
+                                        "type": "string"
+                                    },
+                                    "mime": {
+                                        "description": "MIME type of the image",
+                                        "type": "string"
+                                    },
+                                    "data": {
+                                        "description": "Image data (base64 encoded)",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Image created successfully"
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/stickers/{stickerId}/images/{imageId}": {
+            "put": {
+                "tags": [
+                    "Images"
+                ],
+                "summary": "Update the specified image for a specific sticker in the database",
+                "operationId": "updateImage",
+                "parameters": [
+                    {
+                        "name": "stickerId",
+                        "in": "path",
+                        "description": "ID of the sticker",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "imageId",
+                        "in": "path",
+                        "description": "ID of the image",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "filename",
+                                    "mime",
+                                    "data"
+                                ],
+                                "properties": {
+                                    "filename": {
+                                        "description": "Image filename",
+                                        "type": "string"
+                                    },
+                                    "mime": {
+                                        "description": "MIME type of the image",
+                                        "type": "string"
+                                    },
+                                    "data": {
+                                        "description": "Image data (base64 encoded)",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Image updated successfully"
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Image not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Images"
+                ],
+                "summary": "Remove the specified image for a specific sticker from the database",
+                "operationId": "deleteImage",
+                "parameters": [
+                    {
+                        "name": "stickerId",
+                        "in": "path",
+                        "description": "ID of the sticker",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "imageId",
+                        "in": "path",
+                        "description": "ID of the image",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Image deleted successfully"
+                    },
+                    "404": {
+                        "description": "Image not found"
+                    }
+                }
+            }
+        },
         "/api/auth/login": {
             "post": {
                 "tags": [
                     "Authentication"
                 ],
                 "summary": "User login",
-                "operationId": "2404374a8bb8d9b8e703ae3d6071789a",
+                "operationId": "0ed9c5fc2d9b5ec4d948584d9b40b666",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -136,7 +533,7 @@
                     "Authentication"
                 ],
                 "summary": "User registration",
-                "operationId": "69bf04d59a56789d6a176efd3c153723",
+                "operationId": "52f2cd153e2ccc2c1cd56db3aed20075",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -250,7 +647,7 @@
                     "Authentication"
                 ],
                 "summary": "User logout",
-                "operationId": "afbc2c081e76c7a26f107882325ea91f",
+                "operationId": "8cd0b28dd7c669c1c8b287c43b99b3e0",
                 "responses": {
                     "200": {
                         "description": "User logged out successfully",
@@ -277,7 +674,7 @@
                     "Authentication"
                 ],
                 "summary": "Refresh authentication token",
-                "operationId": "57382a92df78e25a28e3681bda5650d8",
+                "operationId": "56a5ed70d727a85f945841aae497e775",
                 "responses": {
                     "200": {
                         "description": "Token refreshed successfully",
@@ -324,7 +721,7 @@
                     "Authentication"
                 ],
                 "summary": "Get current user information",
-                "operationId": "5cf1d31dc3ab1696578922b121cb1964",
+                "operationId": "4b4363f1b6227396e45c3a8ce7021c2d",
                 "responses": {
                     "200": {
                         "description": "Current user information",
@@ -385,7 +782,7 @@
                     "Authentication"
                 ],
                 "summary": "Send email verification link",
-                "operationId": "158fa0764da50f83721c9c7e2b2fd088",
+                "operationId": "c2b18ade1b328851336afc398c00cb4e",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -471,7 +868,7 @@
                     "Authentication"
                 ],
                 "summary": "Create a new email verification link",
-                "operationId": "0b20530879f7b1598740aef0b5a1e52a",
+                "operationId": "12d7d38d6f1578bab591a7aee3394e0a",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -540,7 +937,7 @@
                     "Authentication"
                 ],
                 "summary": "Verify user email",
-                "operationId": "64fe35b03bc73dc4b9433c94c5989ef3",
+                "operationId": "e7053b0126d7d5ad861a3cbc407ad0df",
                 "requestBody": {
                     "required": true,
                     "content": {

@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\JwtAuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\StickerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// authentication routes
 Route::prefix('auth')->group(
     function ($router) {
         Route::post('/login', [JwtAuthController::class, 'login']);
@@ -29,5 +32,46 @@ Route::prefix('auth')->group(
         // set the where cause otherwise there kept being a problem with the url not being well seen by laravel.
         // now laravel properly sees the verification_token and the redirect_url and makes it one good route.
         Route::get('/verify-email/{verification_token}/{redirect_url}', [JwtAuthController::class, 'verifyEmail'])->name('verification.verify.api')->where('redirect_url', '.*');
+    }
+);
+
+
+// sticker routes and images
+Route::prefix('stickers')->group(
+    function ($router) {
+        // Route to get a list of all stickers
+        Route::get('/', [StickerController::class, 'index']);
+        // Route to get a specific sticker by ID
+        Route::get('/{id}', [StickerController::class, 'show']);
+        // Route to create a new sticker
+        Route::post('/', [StickerController::class, 'store'])->middleware('jwt_full');
+        // Route to update an existing sticker by ID
+        Route::put('/{id}', [StickerController::class, 'update'])->middleware('jwt_full');
+        // Route to delete an existing sticker by ID
+        Route::delete('/{id}', [StickerController::class, 'destroy'])->middleware('jwt_full');
+
+        // Route to get a list of images associated with a specific sticker
+        Route::get('/{stickerId}/images', [ImageController::class, 'index']);
+        // Route to create a new image for a specific sticker
+        Route::post('/{stickerId}/images', [ImageController::class, 'store'])->middleware('jwt_full');
+        // Route to update an existing image for a specific sticker by ID
+        Route::put('/{stickerId}/images/{imageId}', [ImageController::class, 'update'])->middleware('jwt_full');
+        // Route to delete an existing image for a specific sticker by ID
+        Route::delete('/{stickerId}/images/{imageId}', [ImageController::class, 'destroy'])->middleware('jwt_full');
+    }
+);
+
+Route::prefix('categories')->group(
+    function ($router) {
+        // Route to get a list of all categories
+        Route::get('/', [CategoryController::class, 'index']);
+        // Route to get a specific category by ID
+        Route::get('/{id}', [CategoryController::class, 'show']);
+        // Route to create a new category
+        Route::post('/', [CategoryController::class, 'store']);
+        // Route to update an existing category by ID
+        Route::put('/{id}', [CategoryController::class, 'update']);
+        // Route to delete an existing category by ID
+        Route::delete('/{id}', [CategoryController::class, 'destroy']);
     }
 );

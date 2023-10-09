@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\JwtAuthInterface as ControllersJwtAuthInterface;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Cookie;
 use App\Mail\VerifyEmail;
 use Illuminate\Support\Facades\Mail;
+use App\Interfaces\JwtAuthInterface;
 
 
 class JwtAuthController extends Controller implements JwtAuthInterface

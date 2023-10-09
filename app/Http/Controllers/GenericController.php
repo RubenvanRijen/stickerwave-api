@@ -60,7 +60,7 @@ abstract class GenericController extends Controller
         }
 
         // Return a JSON response with the found item.
-        return response()->json($item);
+        return response()->json($item, 200);
     }
 
     /**
