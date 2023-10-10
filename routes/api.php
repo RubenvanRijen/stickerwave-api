@@ -80,15 +80,15 @@ Route::prefix('categories')->group(
 
 Route::prefix('roles')->group(
     function ($router) {
-        // Route to get a list of all categories
+        // Route to get a list of all roles
         Route::get('/', [RoleController::class, 'index'])->middleware(['jwt_full', 'admin']);
-        // Route to get a specific category by ID
+        // Route to get a specific role by ID
         Route::get('/{id}', [RoleController::class, 'show'])->middleware(['jwt_full', 'admin']);
-        // Route to create a new category
+        // Route to create a new role
         Route::post('/', [RoleController::class, 'store'])->middleware(['jwt_full', 'admin']);
-        // Route to update an existing category by ID
+        // Route to update an existing role by ID
         Route::put('/{id}', [RoleController::class, 'update'])->middleware(['jwt_full', 'admin']);
-        // Route to delete an existing category by ID
+        // Route to delete an existing role by ID
         Route::delete('/{id}', [RoleController::class, 'destroy'])->middleware(['jwt_full', 'admin']);
     }
 );
