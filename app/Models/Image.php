@@ -9,6 +9,13 @@ class Image extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = ['filename', 'mime', 'data'];
+
     public function sticker()
     {
         return $this->belongsTo(Sticker::class);

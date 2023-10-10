@@ -9,12 +9,12 @@ class Sticker extends Model
 {
     use HasFactory;
 
- /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $fillable = ['title'];
+    protected $fillable = ['title', 'description'];
 
 
     public function image()
