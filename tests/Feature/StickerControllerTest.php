@@ -2,12 +2,16 @@
 
 namespace Tests\Feature;
 
+use App\Models\Role;
 use App\Models\Sticker;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Database\Seeders\RolesTableSeeder;
+
 
 class StickerControllerTest extends TestCase
 {
@@ -20,7 +24,10 @@ class StickerControllerTest extends TestCase
         parent::setUp();
 
         // set the authentication for certain specific routes.
+        Artisan::call('db:seed', ['--class' => RolesTableSeeder::class]);
         $user = User::factory()->create();
+        $adminRole = Role::where('name', 'admin')->first();
+        $user->roles()->attach($adminRole);
         $token = JWTAuth::fromUser($user);
         $headers = ['Authorization' => 'Bearer ' . $token];
         $this->setHeaders($headers);

@@ -3,9 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
+use App\Models\Role;
 use App\Models\User;
+use Database\Seeders\RolesTableSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -20,7 +23,10 @@ class CategoryControllerTest extends TestCase
         parent::setUp();
 
         // set the authentication for certain specific routes.
+        Artisan::call('db:seed', ['--class' => RolesTableSeeder::class]);
         $user = User::factory()->create();
+        $adminRole = Role::where('name', 'admin')->first();
+        $user->roles()->attach($adminRole);
         $token = JWTAuth::fromUser($user);
         $headers = ['Authorization' => 'Bearer ' . $token];
         $this->setHeaders($headers);

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Cookie;
 use App\Mail\VerifyEmail;
 use Illuminate\Support\Facades\Mail;
 use App\Interfaces\JwtAuthInterface;
-
+use App\Models\Role;
 
 class JwtAuthController extends Controller implements JwtAuthInterface
 {
@@ -85,7 +85,8 @@ class JwtAuthController extends Controller implements JwtAuthInterface
             ['password' => bcrypt($request->password)]
         ));
         $user->verification_token = Str::random(40);
-
+        $userRole = Role::where('name', 'user')->first();
+        $user->roles()->attach($userRole);
         $user->save();
 
         // Return success response with registered user information

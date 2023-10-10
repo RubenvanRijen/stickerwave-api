@@ -34,7 +34,7 @@ abstract class GenericController extends Controller
     public function store(Request $request): JsonResponse
     {
         // Validate the incoming request data using rules defined in getValidationRules method.
-        $validatedData = $request->validate($this->getValidationRules());
+        $validatedData = $request->validate($this->getValidationRulesCreate());
 
         // Create a new model instance with the validated data.
         $item = $this->model::create($validatedData);
@@ -79,7 +79,7 @@ abstract class GenericController extends Controller
         }
 
         // Validate the incoming request data using rules defined in getValidationRules method.
-        $validatedData = $request->validate($this->getValidationRules());
+        $validatedData = $request->validate($this->getValidationRulesUpdate($id));
 
         // Update the item with the validated data.
         $item->update($validatedData);
@@ -89,13 +89,24 @@ abstract class GenericController extends Controller
     }
 
     /**
-     * Get validation rules for the specific model.
+     * Get validation rules for the specific model for create.
      *
      * @return array
      */
-    protected function getValidationRules(): array
+    protected function getValidationRulesCreate(): array
     {
-        // Define the validation rules for the specific model here.
+        // Define the validation rules for the specific model here when creating.
+        return [];
+    }
+
+    /**
+     * Get validation rules for the specific model for updating.
+     *
+     * @return array
+     */
+    protected function getValidationRulesUpdate(mixed $id): array
+    {
+        // Define the validation rules for the specific model here when updating.
         return [];
     }
 

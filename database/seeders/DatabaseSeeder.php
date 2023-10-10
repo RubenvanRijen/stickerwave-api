@@ -20,10 +20,12 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
+            RolesTableSeeder::class,
             StickerTableSeeder::class,
             CategoriesTableSeeder::class,
             ImagesTableSeeder::class,
-            StickerCategoryTableSeeder::class
+            StickerCategoryTableSeeder::class,
+            UsersTableSeeder::class
         ]);
     }
 }
