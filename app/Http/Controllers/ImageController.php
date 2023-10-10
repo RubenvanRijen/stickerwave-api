@@ -6,6 +6,7 @@ use App\Models\Image;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Interfaces\ImagesInterface;
+use App\Models\Sticker;
 
 class ImageController extends Controller implements ImagesInterface
 {
@@ -17,8 +18,21 @@ class ImageController extends Controller implements ImagesInterface
      */
     public function show($stickerId): JsonResponse
     {
-        $images = Image::where('sticker_id', $stickerId)->get();
-        return response()->json(['data' => $images], 200);
+        // Retrieve the sticker by its ID
+        $sticker = Sticker::find($stickerId);
+
+        if (!$sticker) {
+            return response()->json(['error' => 'Sticker not found'], 404);
+        }
+
+        // Use the relationship to get the associated image
+        $image = $sticker->image;
+
+        if (!$image) {
+            return response()->json(['error' => 'Image not found for this sticker'], 404);
+        }
+
+        return response()->json(['data' => $image], 200);
     }
 
     /**

@@ -42,7 +42,14 @@ interface ImagesInterface
      *             )
      *         )
      *     ),
-     *     @OA\Response(response=404, description="Image not found")
+     *     @OA\Response(
+     *         response=404,
+     *         description="Sticker or image not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="error", type="string"),
+     *         ),
+     *     ),
      * )
      */
     public function show($stickerId): JsonResponse;

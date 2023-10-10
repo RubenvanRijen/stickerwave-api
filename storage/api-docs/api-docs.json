@@ -222,7 +222,7 @@
                 "tags": [
                     "Images"
                 ],
-                "summary": "Display a the image associated with a sticker",
+                "summary": "Display the image associated with a sticker",
                 "operationId": "getImage",
                 "parameters": [
                     {
@@ -267,7 +267,19 @@
                         }
                     },
                     "404": {
-                        "description": "Image not found"
+                        "description": "Sticker or image not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             },
