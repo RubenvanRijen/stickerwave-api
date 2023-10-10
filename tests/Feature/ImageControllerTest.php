@@ -19,9 +19,8 @@ class ImageControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        // Seed the database with test data
-        // $this->seed();
+        
+        // set the authentication for certain specific routes.
         $user = User::factory()->create();
         $token = JWTAuth::fromUser($user);
         $headers = ['Authorization' => 'Bearer ' . $token];
