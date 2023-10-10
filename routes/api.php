@@ -5,6 +5,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\JwtAuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StickerController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -94,5 +95,18 @@ Route::prefix('roles')->group(
         Route::put('/{id}', [RoleController::class, 'update'])->middleware(['jwt_full', 'admin']);
         // Route to delete an existing role by ID
         Route::delete('/{id}', [RoleController::class, 'destroy'])->middleware(['jwt_full', 'admin']);
+    }
+);
+
+Route::prefix('transactions')->group(
+    function ($router) {
+        // Retrieve a list of transactions
+        Route::get('', [TransactionController::class, 'index'])->middleware(['jwt_full', 'admin']);
+        // Retrieve transactions by a specific user
+        Route::get('/user', [TransactionController::class, 'getUserTransactions'])->middleware(['jwt_full']);
+        // Retrieve a specific transaction by ID
+        Route::get('/{id}', [TransactionController::class, 'show'])->middleware(['jwt_full', 'admin']);
+        // Retrieve a transaction by a specific user
+        Route::get('{id}/user', [TransactionController::class, 'getUserTransaction'])->middleware(['jwt_full']);
     }
 );

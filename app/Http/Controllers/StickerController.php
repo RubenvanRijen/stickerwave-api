@@ -27,6 +27,7 @@ class StickerController extends GenericController implements StickerInterface
         return [
             'title' => 'required|max:255|min:3',
             'description' => 'required|max:255|min:10',
+            'price' => 'required|numeric|min:0.01',
         ];
     }
 
@@ -41,6 +42,7 @@ class StickerController extends GenericController implements StickerInterface
         return [
             'title' => 'required|max:255|min:3',
             'description' => 'required|max:255|min:10',
+            'price' => 'required|numeric|min:0.01',
         ];
     }
 }

@@ -18,7 +18,8 @@ class StickerFactory extends Factory
     {
         return [
             'title' => $this->faker->word,
-            'description' => $this->faker->sentence
+            'description' => $this->faker->sentence,
+            'price' => $this->faker->randomFloat(2, 10, 1000)
         ];
     }
 }

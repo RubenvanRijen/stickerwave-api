@@ -25,7 +25,8 @@ class DatabaseSeeder extends Seeder
             CategoriesTableSeeder::class,
             ImagesTableSeeder::class,
             StickerCategoryTableSeeder::class,
-            UsersTableSeeder::class
+            UsersTableSeeder::class,
+            TransactionSeeder::class,
         ]);
     }
 }

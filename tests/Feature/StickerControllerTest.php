@@ -48,7 +48,14 @@ class StickerControllerTest extends TestCase
         $response = $this->get('/api/stickers');
 
         $response->assertStatus(200)
-            ->assertJsonCount(3, 'data'); // Assuming you have 3 stickers in the database
+            ->assertJsonStructure([
+                'data' => [
+                    'current_page',
+                    'data',
+                    'first_page_url',
+                ]
+            ]);
+        $response->assertJsonCount(3, 'data.data');
     }
 
     /** @test */
@@ -58,6 +65,7 @@ class StickerControllerTest extends TestCase
         $sticker = Sticker::create([
             'title' => 'Test Sticker',
             'description' => 'This is a test sticker.',
+            'price' => 10.30
         ]);
 
         $response = $this->get('/api/stickers/' . $sticker->id);
@@ -66,6 +74,7 @@ class StickerControllerTest extends TestCase
             ->assertJson([
                 'title' => 'Test Sticker',
                 'description' => 'This is a test sticker.',
+                'price' => 10.30
             ]);
     }
 
@@ -75,6 +84,7 @@ class StickerControllerTest extends TestCase
         $data = [
             'title' => 'Test Sticker',
             'description' => 'This is a test sticker.',
+            'price' => 10.30
         ];
 
         $response = $this->postJson('/api/stickers', $data, $this->headers);
@@ -83,6 +93,7 @@ class StickerControllerTest extends TestCase
             ->assertJson([
                 'title' => 'Test Sticker',
                 'description' => 'This is a test sticker.',
+                'price' => 10.30
             ]);
 
         // Verify that the record exists in the database
@@ -96,11 +107,13 @@ class StickerControllerTest extends TestCase
         $sticker = Sticker::create([
             'title' => 'Original Title',
             'description' => 'Original Description',
+            'price' => 10.30
         ]);
 
         $data = [
             'title' => 'Updated Title',
             'description' => 'Updated Description',
+            'price' => 10.30
         ];
 
         $response = $this->putJson('/api/stickers/' . $sticker->id, $data, $this->headers);
@@ -109,6 +122,7 @@ class StickerControllerTest extends TestCase
             ->assertJson([
                 'title' => 'Updated Title',
                 'description' => 'Updated Description',
+                'price' => 10.30
             ]);
 
         // Verify that the record has been updated in the database
@@ -122,6 +136,7 @@ class StickerControllerTest extends TestCase
         $sticker = Sticker::create([
             'title' => 'To Be Deleted',
             'description' => 'Delete this sticker.',
+            'price' => 10.30
         ]);
 
         $response = $this->delete('/api/stickers/' . $sticker->id, [], $this->headers);
@@ -132,6 +147,7 @@ class StickerControllerTest extends TestCase
         $this->assertDatabaseMissing('stickers', [
             'title' => 'To Be Deleted',
             'description' => 'Delete this sticker.',
+            'price' => 10.30
         ]);
     }
 }

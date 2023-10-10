@@ -177,6 +177,10 @@ interface RolesInterface
      *         response=422,
      *         description="Validation error",
      *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No permissions",
+     *     ),
      * )
      */
     public function update(Request $request, mixed $id): JsonResponse;

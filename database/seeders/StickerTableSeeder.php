@@ -17,18 +17,22 @@ class StickerTableSeeder extends Seeder
             [
                 'title' => 'Sticker 1',
                 'description' => 'Description for Sticker 1',
+                'price' => 10.30
             ],
             [
                 'title' => 'Sticker 2',
                 'description' => 'Description for Sticker 2',
+                'price' => 11.30
             ],
             [
                 'title' => 'Sticker 3',
                 'description' => 'Description for Sticker 3',
+                'price' => 12.30
             ],
             [
                 'title' => 'Sticker 4',
                 'description' => 'Description for Sticker 4',
+                'price' => 13.30
             ],
         ]);
     }

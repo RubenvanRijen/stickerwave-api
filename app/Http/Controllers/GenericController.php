@@ -21,7 +21,7 @@ abstract class GenericController extends Controller
      */
     public function index(): JsonResponse
     {
-        $data = $this->model::all();
+        $data = $this->model::paginate(10);
         return response()->json(['data' => $data], 200);
     }
 
