@@ -10,7 +10,7 @@ interface ImagesInterface
 {
     /**
      * @OA\Get(
-     *     path="/stickers/{stickerId}/images",
+     *     path="/api/stickers/{stickerId}/images",
      *     operationId="getImages",
      *     tags={"Images"},
      *     summary="Get a list of images associated with a specific sticker",
@@ -43,7 +43,7 @@ interface ImagesInterface
 
     /**
      * @OA\Post(
-     *     path="/stickers/{stickerId}/images",
+     *     path="/api/stickers/{stickerId}/images",
      *     operationId="storeImage",
      *     tags={"Images"},
      *     summary="Store a newly created image for a specific sticker in the database",
@@ -71,7 +71,7 @@ interface ImagesInterface
 
     /**
      * @OA\Put(
-     *     path="/stickers/{stickerId}/images/{imageId}",
+     *     path="/api/stickers/{stickerId}/images/{imageId}",
      *     operationId="updateImage",
      *     tags={"Images"},
      *     summary="Update the specified image for a specific sticker in the database",
@@ -107,7 +107,7 @@ interface ImagesInterface
 
     /**
      * @OA\Delete(
-     *     path="/stickers/{stickerId}/images/{imageId}",
+     *     path="/api/stickers/{stickerId}/images/{imageId}",
      *     operationId="deleteImage",
      *     tags={"Images"},
      *     summary="Remove the specified image for a specific sticker from the database",

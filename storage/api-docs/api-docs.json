@@ -16,7 +16,7 @@
                 }
             }
         },
-        "/categories": {
+        "/api/categories": {
             "get": {
                 "tags": [
                     "Categories"
@@ -82,7 +82,7 @@
                 }
             }
         },
-        "/categories/{id}": {
+        "/api/categories/{id}": {
             "get": {
                 "tags": [
                     "Categories"
@@ -199,7 +199,7 @@
                 }
             }
         },
-        "/stickers/{stickerId}/images": {
+        "/api/stickers/{stickerId}/images": {
             "get": {
                 "tags": [
                     "Images"
@@ -309,7 +309,7 @@
                 }
             }
         },
-        "/stickers/{stickerId}/images/{imageId}": {
+        "/api/stickers/{stickerId}/images/{imageId}": {
             "put": {
                 "tags": [
                     "Images"

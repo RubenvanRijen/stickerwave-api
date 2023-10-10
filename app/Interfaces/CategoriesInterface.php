@@ -10,7 +10,7 @@ interface CategoriesInterface
 {
     /**
      * @OA\Get(
-     *     path="/categories",
+     *     path="/api/categories",
      *     operationId="getCategories",
      *     tags={"Categories"},
      *     summary="Get a list of categories",
@@ -32,7 +32,7 @@ interface CategoriesInterface
 
     /**
      * @OA\Get(
-     *     path="/categories/{id}",
+     *     path="/api/categories/{id}",
      *     operationId="getCategoryById",
      *     tags={"Categories"},
      *     summary="Show the specified category by ID",
@@ -55,7 +55,7 @@ interface CategoriesInterface
 
     /**
      * @OA\Post(
-     *     path="/categories",
+     *     path="/api/categories",
      *     operationId="storeCategory",
      *     tags={"Categories"},
      *     summary="Store a newly created category in the database",
@@ -74,7 +74,7 @@ interface CategoriesInterface
 
     /**
      * @OA\Put(
-     *     path="/categories/{id}",
+     *     path="/api/categories/{id}",
      *     operationId="updateCategory",
      *     tags={"Categories"},
      *     summary="Update the specified category by ID",
@@ -101,7 +101,7 @@ interface CategoriesInterface
 
     /**
      * @OA\Delete(
-     *     path="/categories/{id}",
+     *     path="/api/categories/{id}",
      *     operationId="deleteCategory",
      *     tags={"Categories"},
      *     summary="Remove the specified category by ID",
