@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('filename');
             $table->string('mime');
             $table->binary('data'); // Use binary for image data
-            $table->unsignedBigInteger('sticker_id')->unique(); // Unique constraint for one-to-one relationship
+            $table->unsignedBigInteger('sticker_id')->unique()->nullable(true); // Unique constraint for one-to-one relationship
             $table->timestamps();
         });
 

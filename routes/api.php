@@ -68,10 +68,10 @@ Route::prefix('categories')->group(
         // Route to get a specific category by ID
         Route::get('/{id}', [CategoryController::class, 'show']);
         // Route to create a new category
-        Route::post('/', [CategoryController::class, 'store']);
+        Route::post('/', [CategoryController::class, 'store'])->middleware('jwt_full');
         // Route to update an existing category by ID
-        Route::put('/{id}', [CategoryController::class, 'update']);
+        Route::put('/{id}', [CategoryController::class, 'update'])->middleware('jwt_full');
         // Route to delete an existing category by ID
-        Route::delete('/{id}', [CategoryController::class, 'destroy']);
+        Route::delete('/{id}', [CategoryController::class, 'destroy'])->middleware('jwt_full');
     }
 );
