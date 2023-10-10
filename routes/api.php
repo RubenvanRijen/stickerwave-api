@@ -51,8 +51,8 @@ Route::prefix('stickers')->group(
         // Route to delete an existing sticker by ID
         Route::delete('/{id}', [StickerController::class, 'destroy'])->middleware(['jwt_full', 'admin']);
 
-        // Route to get a list of images associated with a specific sticker
-        Route::get('/{stickerId}/images', [ImageController::class, 'index']);
+        // Route to get the image associated to a sticker
+        Route::get('/{stickerId}/images', [ImageController::class, 'show']);
         // Route to create a new image for a specific sticker
         Route::post('/{stickerId}/images', [ImageController::class, 'store'])->middleware(['jwt_full', 'admin']);
         // Route to update an existing image for a specific sticker by ID

@@ -70,7 +70,15 @@ interface StickerInterface
      *             @OA\Property(property="message", type="string", example="The given data was invalid."),
      *             @OA\Property(property="errors", type="object", example={"title": {"The title field is required."}})
      *         )
-     *     )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized",
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No permissions",
+     *     ),
      * )
      */
     public function store(Request $request): JsonResponse;
@@ -106,7 +114,7 @@ interface StickerInterface
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Sticker not found")
      *         )
-     *     )
+     *     ),
      * )
      */
     public function show(mixed $id): JsonResponse;
@@ -156,7 +164,15 @@ interface StickerInterface
      *             @OA\Property(property="message", type="string", example="The given data was invalid."),
      *             @OA\Property(property="errors", type="object", example={"title": {"The title field is required."}})
      *         )
-     *     )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized",
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No permissions",
+     *     ),
      * )
      */
     public function update(Request $request, mixed $id): JsonResponse;
@@ -184,7 +200,15 @@ interface StickerInterface
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Sticker not found")
      *         )
-     *     )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized",
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No permissions",
+     *     ),
      * )
      */
     public function destroy(mixed $id): JsonResponse;

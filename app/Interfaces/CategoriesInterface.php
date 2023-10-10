@@ -74,6 +74,14 @@ interface CategoriesInterface
      *     ),
      *     @OA\Response(response=201, description="Category created successfully"),
      *     @OA\Response(response=400, description="Validation error"),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized",
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No permissions",
+     *     ),
      * )
      */
     public function store(Request $request): JsonResponse;
@@ -101,6 +109,14 @@ interface CategoriesInterface
      *     @OA\Response(response=200, description="Category updated successfully"),
      *     @OA\Response(response=400, description="Validation error"),
      *     @OA\Response(response=404, description="Category not found"),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized",
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No permissions",
+     *     ),
      * )
      */
     public function update(Request $request, $id): JsonResponse;
@@ -120,6 +136,14 @@ interface CategoriesInterface
      *     ),
      *     @OA\Response(response=200, description="Category deleted successfully"),
      *     @OA\Response(response=404, description="Category not found"),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized",
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No permissions",
+     *     ),
      * )
      */
     public function destroy($id): JsonResponse;

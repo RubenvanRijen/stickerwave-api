@@ -17,9 +17,9 @@ interface ImagesInterface
     /**
      * @OA\Get(
      *     path="/api/stickers/{stickerId}/images",
-     *     operationId="getImages",
+     *     operationId="getImage",
      *     tags={"Images"},
-     *     summary="Get a list of images associated with a specific sticker",
+     *     summary="Display the image associated with a sticker",
      *     @OA\Parameter(
      *         name="stickerId",
      *         in="path",
@@ -29,7 +29,7 @@ interface ImagesInterface
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="List of images",
+     *         description="Image of the sticker",
      *         @OA\JsonContent(
      *             type="array",
      *             @OA\Items(
@@ -45,7 +45,7 @@ interface ImagesInterface
      *     @OA\Response(response=404, description="Image not found")
      * )
      */
-    public function index($stickerId): JsonResponse;
+    public function show($stickerId): JsonResponse;
 
     /**
      * @OA\Post(
@@ -71,6 +71,14 @@ interface ImagesInterface
      *     ),
      *     @OA\Response(response=201, description="Image created successfully"),
      *     @OA\Response(response=400, description="Validation error"),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized",
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No permissions",
+     *     ),
      * )
      */
     public function store(Request $request, $stickerId): JsonResponse;
@@ -107,6 +115,14 @@ interface ImagesInterface
      *     @OA\Response(response=200, description="Image updated successfully"),
      *     @OA\Response(response=400, description="Validation error"),
      *     @OA\Response(response=404, description="Image not found"),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized",
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No permissions",
+     *     ),
      * )
      */
     public function update(Request $request, $stickerId, $imageId): JsonResponse;
@@ -133,6 +149,14 @@ interface ImagesInterface
      *     ),
      *     @OA\Response(response=200, description="Image deleted successfully"),
      *     @OA\Response(response=404, description="Image not found"),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized",
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No permissions",
+     *     ),
      * )
      */
     public function destroy($stickerId, $imageId): JsonResponse;

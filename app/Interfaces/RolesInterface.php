@@ -76,6 +76,10 @@ interface RolesInterface
      *         response=422,
      *         description="Validation error",
      *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No permissions",
+     *     ),
      * )
      */
     public function store(Request $request): JsonResponse;
@@ -116,6 +120,10 @@ interface RolesInterface
      *     @OA\Response(
      *         response=404,
      *         description="Role not found",
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No permissions",
      *     ),
      * )
      */
@@ -201,6 +209,10 @@ interface RolesInterface
      *     @OA\Response(
      *         response=404,
      *         description="Role not found",
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No permissions",
      *     ),
      * )
      */

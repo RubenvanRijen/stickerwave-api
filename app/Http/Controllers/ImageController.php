@@ -10,12 +10,12 @@ use App\Interfaces\ImagesInterface;
 class ImageController extends Controller implements ImagesInterface
 {
     /**
-     * Display a listing of images associated with a specific sticker.
+     * Display the image associated with a sticker.
      *
      * @param  int  $stickerId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index($stickerId): JsonResponse
+    public function show($stickerId): JsonResponse
     {
         $images = Image::where('sticker_id', $stickerId)->get();
         return response()->json(['data' => $images], 200);
