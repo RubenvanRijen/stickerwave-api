@@ -226,6 +226,38 @@ class JwtAuthController extends Controller implements JwtAuthInterface
     }
 
     /**
+     * create a user for an admin.
+     */
+    public function createUser(Request $request): JsonResponse
+    {
+        // Validate incoming registration request
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|between:2,100',
+            'email' => 'required|string|email|max:100|unique:users',
+            'password' => 'required|string|confirmed|min:6',
+            'role' => 'nullable|exists:roles,name',
+        ]);
+
+        if ($validator->fails()) {
+            // Return validation error if validation fails
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        // Create a new user with hashed password
+        $user = User::create(array_merge(
+            $validator->validated(),
+            ['password' => bcrypt($request->password)]
+        ));
+        $user->verification_token = Str::random(40);
+        $role = Role::where('name', $validator['role'])->first();
+        $user->roles()->attach($role);
+        $user->save();
+
+        // Return success response with registered user information
+        return response()->json(['message' => 'User successfully registered', 'user' => $user], 201);
+    }
+
+    /**
      * @param string $token
      * @return JsonResponse
      */

@@ -23,6 +23,8 @@ Route::prefix('auth')->group(
     function ($router) {
         Route::post('/login', [JwtAuthController::class, 'login']);
         Route::post('/register', [JwtAuthController::class, 'register']);
+        Route::post('/createUser', [JwtAuthController::class, 'createUser'])->middleware(['jwt_full', 'admin']);
+
 
         Route::post('/logout', [JwtAuthController::class, 'logout'])->middleware('jwt_full');
         Route::get('/user-profile', [JwtAuthController::class, 'getCurrentUser'])->middleware('jwt_full');
