@@ -6,10 +6,10 @@ use App\Interfaces\StickerInterface;
 use Illuminate\Http\Request;
 use App\Models\Sticker;
 
-class StickerController extends GenericController
+class StickerController extends GenericController implements StickerInterface
 {
 
-     /**
+    /**
      * The Eloquent model associated with this controller.
      *
      * @var Model

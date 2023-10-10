@@ -1346,8 +1346,20 @@
     },
     "tags": [
         {
+            "name": "Categories",
+            "description": "Endpoints for Categories"
+        },
+        {
+            "name": "Images",
+            "description": "Endpoints for Images"
+        },
+        {
             "name": "Authentication",
             "description": "Endpoints for user authentication and authorization"
+        },
+        {
+            "name": "Stickers",
+            "description": "Endpoints for Stickers"
         }
     ]
 }

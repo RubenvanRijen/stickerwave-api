@@ -6,6 +6,12 @@ use App\Models\Image;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * @OA\Tag(
+ *     name="Categories",
+ *     description="Endpoints for Categories"
+ * )
+ */
 interface CategoriesInterface
 {
     /**
