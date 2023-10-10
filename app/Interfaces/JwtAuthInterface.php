@@ -331,7 +331,14 @@ interface JwtAuthInterface
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Unauthorized")
      *         )
-     *     )
+     *     ),
+          *     @OA\Response(
+     *         response=404,
+     *         description="Not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The role has not been found")
+     *         )
+     *     ),
      * )
      */
     public function createUser(Request $request): JsonResponse;

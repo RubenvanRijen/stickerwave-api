@@ -243,13 +243,18 @@ class JwtAuthController extends Controller implements JwtAuthInterface
             return response()->json(['error' => $validator->errors()], 400);
         }
 
+        $validatedData = $validator->getData();
+
         // Create a new user with hashed password
         $user = User::create(array_merge(
             $validator->validated(),
             ['password' => bcrypt($request->password)]
         ));
         $user->verification_token = Str::random(40);
-        $role = Role::where('name', $validator['role'])->first();
+        $role = Role::where('name', $validatedData['role'])->first();
+        if(!$role){
+            return response()->json(['message' => 'no role found with that name'], 404);
+        }
         $user->roles()->attach($role);
         $user->save();
 

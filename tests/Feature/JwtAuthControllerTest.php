@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Artisan;
@@ -9,12 +10,14 @@ use Illuminate\Support\Facades\Cookie;
 use Tests\TestCase;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
-
+use Database\Seeders\RolesTableSeeder;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class JwtAuthControllerTest extends TestCase
 {
     use RefreshDatabase; // Automatically reset the database after each test
     use WithFaker;       // Use Faker for generating fake data
+    protected $adminHeaders = [];
 
 
     /**
@@ -25,6 +28,24 @@ class JwtAuthControllerTest extends TestCase
         parent::setUp();
         // Migrate the database
         Artisan::call('migrate');
+        // set the authentication for certain specific routes.
+        Artisan::call('db:seed', ['--class' => RolesTableSeeder::class]);
+        $this->createAdminUser();
+    }
+
+    protected function createAdminUser()
+    {
+        $user = User::factory()->create();
+        $adminRole = Role::where('name', 'admin')->first();
+        $user->roles()->attach($adminRole);
+        $token = JWTAuth::fromUser($user);
+        $headers = ['Authorization' => 'Bearer ' . $token];
+        $this->setAdminHeaders($headers);
+    }
+
+    protected function setAdminHeaders(array $headers)
+    {
+        $this->adminHeaders = $headers;
     }
 
     public function testLogin()
@@ -161,5 +182,31 @@ class JwtAuthControllerTest extends TestCase
 
         // Assert that the redirect URL matches the expected URL
         $response->assertRedirect('http://example.com/verified-success');
+    }
+
+    /**
+     * Test the createUser function.
+     *
+     * @return void
+     */
+    public function testCreateUser()
+    {
+        // Define test data for the request
+        $userData = [
+            'name' => $this->faker->name,
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'role' => 'admin',
+        ];
+
+        // Make a POST request to the createUser route with the test data
+        $response = $this->post('/api/auth/createUser', $userData, $this->adminHeaders);
+
+        // Assert that the response has a status code of 201 (Created)
+        $response->assertStatus(201);
+
+        // Assert that the response JSON contains the expected message
+        $response->assertJson(['message' => 'User successfully registered']);
     }
 }
