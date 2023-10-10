@@ -16,7 +16,9 @@ class CategoryControllerTest extends TestCase
 {
     use RefreshDatabase; // Automatically reset the database after each test
     use WithFaker;       // Use Faker for generating fake data
-    protected $headers = [];
+    protected $adminHeaders = [];
+    protected $userHeaders = [];
+
 
     protected function setUp(): void
     {
@@ -24,18 +26,38 @@ class CategoryControllerTest extends TestCase
 
         // set the authentication for certain specific routes.
         Artisan::call('db:seed', ['--class' => RolesTableSeeder::class]);
+        $this->createAdminUser();
+        $this->createNormalUser();
+    }
+
+    protected function createAdminUser()
+    {
         $user = User::factory()->create();
         $adminRole = Role::where('name', 'admin')->first();
         $user->roles()->attach($adminRole);
         $token = JWTAuth::fromUser($user);
         $headers = ['Authorization' => 'Bearer ' . $token];
-        $this->setHeaders($headers);
+        $this->setAdminHeaders($headers);
     }
 
-    // Custom method to set headers
-    protected function setHeaders(array $headers)
+    protected function setAdminHeaders(array $headers)
     {
-        $this->headers = $headers;
+        $this->adminHeaders = $headers;
+    }
+
+    protected function createNormalUser()
+    {
+        $user = User::factory()->create();
+        $userRole = Role::where('name', 'user')->first();
+        $user->roles()->attach($userRole);
+        $token = JWTAuth::fromUser($user);
+        $headers = ['Authorization' => 'Bearer ' . $token];
+        $this->setUserHeaders($headers);
+    }
+
+    protected function setUserHeaders(array $headers)
+    {
+        $this->userHeaders = $headers;
     }
 
 
@@ -46,8 +68,11 @@ class CategoryControllerTest extends TestCase
 
         $response = $this->get('/api/categories');
 
+        $data = json_decode($response->getContent(), true);
+
         $response->assertStatus(200)
             ->assertJsonStructure(['data' => []]);
+        $this->assertCount(3, $data['data']);
     }
 
     public function testShow()
@@ -65,7 +90,7 @@ class CategoryControllerTest extends TestCase
     {
         $data = ['title' => 'New Category'];
 
-        $response = $this->post('/api/categories', $data, $this->headers);
+        $response = $this->post('/api/categories', $data, $this->adminHeaders);
 
         $response->assertStatus(201)
             ->assertJson(['message' => 'Category created successfully']);
@@ -78,7 +103,7 @@ class CategoryControllerTest extends TestCase
 
         $data = ['title' => 'Updated Category'];
 
-        $response = $this->put("/api/categories/{$category->id}", $data, $this->headers);
+        $response = $this->put("/api/categories/{$category->id}", $data, $this->adminHeaders);
 
         $response->assertStatus(200)
             ->assertJson(['message' => 'Category updated successfully']);
@@ -89,9 +114,19 @@ class CategoryControllerTest extends TestCase
         // Create a category in the database for testing
         $category = Category::factory()->create();
 
-        $response = $this->delete("/api/categories/{$category->id}", [], $this->headers);
+        $response = $this->delete("/api/categories/{$category->id}", [], $this->adminHeaders);
 
         $response->assertStatus(200)
             ->assertJson(['message' => 'Category deleted successfully']);
+    }
+
+    public function testDestroyfailed()
+    {
+        // Create a category in the database for testing
+        $category = Category::factory()->create();
+
+        $response = $this->delete("/api/categories/{$category->id}", [], $this->userHeaders);
+
+        $response->assertStatus(403);
     }
 }
