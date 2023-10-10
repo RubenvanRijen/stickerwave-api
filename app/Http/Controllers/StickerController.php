@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Interfaces\StickerInterface;
 use Illuminate\Http\Request;
+use App\Models\Sticker;
 
 class StickerController extends GenericController
 {
 
+     /**
+     * The Eloquent model associated with this controller.
+     *
+     * @var Model
+     */
+    protected $model = Sticker::class;
 
     /**
      * Get validation rules for the specific model.
