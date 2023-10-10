@@ -64,6 +64,7 @@ interface CategoriesInterface
      *     path="/api/categories",
      *     operationId="storeCategory",
      *     tags={"Categories"},
+     *     security={{"jwt_token":{}}},
      *     summary="Store a newly created category in the database",
      *     @OA\RequestBody(
      *         required=true,
@@ -91,6 +92,7 @@ interface CategoriesInterface
      *     path="/api/categories/{id}",
      *     operationId="updateCategory",
      *     tags={"Categories"},
+     *     security={{"jwt_token":{}}},
      *     summary="Update the specified category by ID",
      *     @OA\Parameter(
      *         name="id",
@@ -126,6 +128,7 @@ interface CategoriesInterface
      *     path="/api/categories/{id}",
      *     operationId="deleteCategory",
      *     tags={"Categories"},
+     *     security={{"jwt_token":{}}},
      *     summary="Remove the specified category by ID",
      *     @OA\Parameter(
      *         name="id",

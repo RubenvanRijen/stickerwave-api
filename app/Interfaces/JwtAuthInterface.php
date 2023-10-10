@@ -115,6 +115,7 @@ interface JwtAuthInterface
      *     path="/api/auth/logout",
      *     summary="User logout",
      *     tags={"Authentication"},
+     *     security={{"jwt_token":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="User logged out successfully",
@@ -131,6 +132,7 @@ interface JwtAuthInterface
      *     path="/api/auth/refresh",
      *     summary="Refresh authentication token",
      *     tags={"Authentication"},
+     *     security={{"jwt_token":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Token refreshed successfully",
@@ -152,9 +154,10 @@ interface JwtAuthInterface
 
     /**
      * @OA\Get(
-     *     path="/api/auth/current-user",
+     *     path="/api/auth/user-profile",
      *     summary="Get current user information",
      *     tags={"Authentication"},
+     *     security={{"jwt_token":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Current user information",
@@ -292,7 +295,7 @@ interface JwtAuthInterface
      *     summary="Create a user for an admin",
      *     operationId="createUser",
      *     tags={"Authentication"},
-     *     security={{ "jwt": {} }},
+     *     security={{ "jwt_token": {} }},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -332,7 +335,7 @@ interface JwtAuthInterface
      *             @OA\Property(property="message", type="string", example="Unauthorized")
      *         )
      *     ),
-          *     @OA\Response(
+     *     @OA\Response(
      *         response=404,
      *         description="Not found",
      *         @OA\JsonContent(

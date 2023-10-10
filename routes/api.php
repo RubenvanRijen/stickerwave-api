@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
 // authentication routes
 Route::prefix('auth')->group(
     function ($router) {

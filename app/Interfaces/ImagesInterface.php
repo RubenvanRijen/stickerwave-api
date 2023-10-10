@@ -59,6 +59,7 @@ interface ImagesInterface
      *     path="/api/stickers/{stickerId}/images",
      *     operationId="storeImage",
      *     tags={"Images"},
+     *     security={{"jwt_token":{}}},
      *     summary="Store a newly created image for a specific sticker in the database",
      *     @OA\Parameter(
      *         name="stickerId",
@@ -95,6 +96,7 @@ interface ImagesInterface
      *     path="/api/stickers/{stickerId}/images/{imageId}",
      *     operationId="updateImage",
      *     tags={"Images"},
+     *     security={{"jwt_token":{}}},
      *     summary="Update the specified image for a specific sticker in the database",
      *     @OA\Parameter(
      *         name="stickerId",
@@ -139,6 +141,7 @@ interface ImagesInterface
      *     path="/api/stickers/{stickerId}/images/{imageId}",
      *     operationId="deleteImage",
      *     tags={"Images"},
+     *     security={{"jwt_token":{}}},
      *     summary="Remove the specified image for a specific sticker from the database",
      *     @OA\Parameter(
      *         name="stickerId",

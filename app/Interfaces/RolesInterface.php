@@ -20,7 +20,7 @@ interface RolesInterface
      *     path="/api/roles",
      *     summary="Get a list of all roles",
      *     tags={"Roles"},
-     *     security={{"bearerAuth":{}}},
+     *     security={{"jwt_token":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="List of roles",
@@ -47,7 +47,7 @@ interface RolesInterface
      *     path="/api/roles",
      *     summary="Create a new role",
      *     tags={"Roles"},
-     *     security={{"bearerAuth":{}}},
+     *     security={{"jwt_token":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         description="Role data",
@@ -90,7 +90,7 @@ interface RolesInterface
      *     path="/api/roles/{id}",
      *     summary="Get a specific role by ID",
      *     tags={"Roles"},
-     *     security={{"bearerAuth":{}}},
+     *     security={{"jwt_token":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -134,7 +134,7 @@ interface RolesInterface
      *     path="/api/roles/{id}",
      *     summary="Update an existing role by ID",
      *     tags={"Roles"},
-     *     security={{"bearerAuth":{}}},
+     *     security={{"jwt_token":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -187,7 +187,7 @@ interface RolesInterface
      *     path="/api/roles/{id}",
      *     summary="Delete an existing role by ID",
      *     tags={"Roles"},
-     *     security={{"bearerAuth":{}}},
+     *     security={{"jwt_token":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

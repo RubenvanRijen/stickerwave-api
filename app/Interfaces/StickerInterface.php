@@ -45,6 +45,7 @@ interface StickerInterface
      *     path="/api/stickers",
      *     summary="Create a new sticker",
      *     tags={"Stickers"},
+     *     security={{"jwt_token":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -124,6 +125,7 @@ interface StickerInterface
      *     path="/api/stickers/{id}",
      *     summary="Update a sticker by ID",
      *     tags={"Stickers"},
+     *     security={{"jwt_token":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -183,6 +185,7 @@ interface StickerInterface
      *     path="/api/stickers/{id}",
      *     summary="Delete a sticker by ID",
      *     tags={"Stickers"},
+     *     security={{"jwt_token":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

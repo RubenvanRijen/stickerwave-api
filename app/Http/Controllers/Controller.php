@@ -14,15 +14,20 @@ use OpenApi\Annotations as OA;
  *    title="StickerWave-API",
  *    description="Sticker wave Api",
  *    version="1.0.0",
- * )
+ * ) 
  */
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
     /**
-     * @OA\Get(
-     *     path="documentation",
-     *     @OA\Response(response="200", description="Documentation endpoint to prevent crashes")
+     * @OA\SecurityScheme(
+     *     type="http",
+     *     description="JWT Token",
+     *     name="Authorization",
+     *     in="header",
+     *     scheme="bearer",
+     *     bearerFormat="JWT",
+     *     securityScheme="jwt_token",
      * )
      */
     public function documentation()
