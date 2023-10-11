@@ -60,7 +60,7 @@ class CategoryControllerTest extends TestCase
         $this->userHeaders = $headers;
     }
 
-
+    /** @test */
     public function testIndex()
     {
         // Create some categories in the database for testing
@@ -68,13 +68,18 @@ class CategoryControllerTest extends TestCase
 
         $response = $this->get('/api/categories');
 
-        $data = json_decode($response->getContent(), true);
-
         $response->assertStatus(200)
-            ->assertJsonStructure(['data' => []]);
-        $this->assertCount(3, $data['data']);
+            ->assertJsonStructure([
+                'data' => [
+                    'current_page',
+                    'data',
+                    'first_page_url',
+                ]
+            ]);
+        $response->assertJsonCount(3, 'data.data');
     }
 
+    /** @test */
     public function testShow()
     {
         // Create a category in the database for testing
@@ -86,6 +91,7 @@ class CategoryControllerTest extends TestCase
             ->assertJson(['data' => []]);
     }
 
+    /** @test */
     public function testStore()
     {
         $data = ['title' => 'New Category'];
@@ -96,6 +102,7 @@ class CategoryControllerTest extends TestCase
             ->assertJson(['message' => 'Category created successfully']);
     }
 
+    /** @test */
     public function testUpdate()
     {
         // Create a category in the database for testing
@@ -109,6 +116,7 @@ class CategoryControllerTest extends TestCase
             ->assertJson(['message' => 'Category updated successfully']);
     }
 
+    /** @test */
     public function testDestroy()
     {
         // Create a category in the database for testing
@@ -120,6 +128,7 @@ class CategoryControllerTest extends TestCase
             ->assertJson(['message' => 'Category deleted successfully']);
     }
 
+    /** @test */
     public function testDestroyfailed()
     {
         // Create a category in the database for testing

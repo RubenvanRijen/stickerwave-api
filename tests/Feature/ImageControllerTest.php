@@ -22,7 +22,7 @@ class ImageControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // set the authentication for certain specific routes.
         Artisan::call('db:seed', ['--class' => RolesTableSeeder::class]);
         $user = User::factory()->create();
@@ -39,7 +39,7 @@ class ImageControllerTest extends TestCase
         $this->headers = $headers;
     }
 
-
+    /** @test */
     public function it_can_list_images_for_a_specific_sticker()
     {
         $sticker = Sticker::factory()->create();
@@ -51,10 +51,9 @@ class ImageControllerTest extends TestCase
             ->assertJsonStructure(['data' => []]);
     }
 
+    /** @test */
     public function it_can_create_an_image_for_a_specific_sticker()
     {
-
-
 
         $sticker = Sticker::factory()->create();
         $data = [
@@ -74,6 +73,7 @@ class ImageControllerTest extends TestCase
         ]);
     }
 
+    /** @test */
     public function it_can_update_an_image_for_a_specific_sticker()
     {
         $sticker = Sticker::factory()->create();
@@ -96,6 +96,7 @@ class ImageControllerTest extends TestCase
         ]);
     }
 
+    /** @test */
     public function it_can_delete_an_image_for_a_specific_sticker()
     {
         $sticker = Sticker::factory()->create();

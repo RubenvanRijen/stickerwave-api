@@ -39,6 +39,7 @@ class StickerControllerTest extends TestCase
         $this->headers = $headers;
     }
 
+    /** @test */
     public function it_can_list_all_stickers()
     {
         // Create some sticker records in the database
@@ -57,6 +58,7 @@ class StickerControllerTest extends TestCase
         $response->assertJsonCount(3, 'data.data');
     }
 
+    /** @test */
     public function it_can_show_a_specific_sticker()
     {
         // Create a sticker record in the database
@@ -76,6 +78,7 @@ class StickerControllerTest extends TestCase
             ]);
     }
 
+    /** @test */
     public function it_can_create_a_sticker()
     {
         $data = [
@@ -97,6 +100,7 @@ class StickerControllerTest extends TestCase
         $this->assertDatabaseHas('stickers', $data);
     }
 
+    /** @test */
     public function it_can_update_a_sticker()
     {
         // Create a sticker record in the database
@@ -125,6 +129,7 @@ class StickerControllerTest extends TestCase
         $this->assertDatabaseHas('stickers', $data);
     }
 
+    /** @test */
     public function it_can_delete_a_sticker()
     {
         // Create a sticker record in the database

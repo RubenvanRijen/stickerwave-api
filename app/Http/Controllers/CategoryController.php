@@ -16,7 +16,7 @@ class CategoryController extends Controller implements CategoriesInterface
      */
     public function index(): JsonResponse
     {
-        $categories = Category::all();
+        $categories = Category::paginate(10);
         return response()->json(['data' => $categories], 200);
     }
 

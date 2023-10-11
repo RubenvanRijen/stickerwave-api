@@ -65,7 +65,7 @@ class TransactionControllerTest extends TestCase
     }
 
 
-    
+     /** @test */
     public function it_can_retrieve_a_list_of_transactions()
     {
         $stickers = Sticker::all();
@@ -78,7 +78,7 @@ class TransactionControllerTest extends TestCase
         $response->assertJsonStructure(['data']);
     }
 
-   
+    /** @test */
     public function it_can_retrieve_a_specific_transaction_by_id()
     {
         $stickers = Sticker::all();
@@ -91,7 +91,7 @@ class TransactionControllerTest extends TestCase
         $response->assertJson(['data' => $transaction->toArray()]);
     }
 
-    
+     /** @test */
     public function it_can_not_retrieve_a_specific_transaction_by_id()
     {
         $stickers = Sticker::all();
@@ -103,7 +103,7 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(403);
     }
 
-    
+     /** @test */
     public function it_returns_404_if_transaction_by_id_is_not_found()
     {
         $response = $this->get('/api/transactions/999', $this->adminHeaders);
@@ -113,7 +113,7 @@ class TransactionControllerTest extends TestCase
     }
 
 
-    
+     /** @test */
     public function it_can_retrieve_a_specific_transaction_by_a_specific_user()
     {
         $stickers = Sticker::all();

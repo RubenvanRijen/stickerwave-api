@@ -48,6 +48,7 @@ class JwtAuthControllerTest extends TestCase
         $this->adminHeaders = $headers;
     }
 
+    /** @test */
     public function testLogin()
     {
         // Create a user for testing
@@ -71,6 +72,7 @@ class JwtAuthControllerTest extends TestCase
         $response->assertJsonStructure(['access_token']);
     }
 
+    /** @test */
     public function testRegister()
     {
         // Define the registration data
@@ -91,6 +93,7 @@ class JwtAuthControllerTest extends TestCase
         $response->assertJsonStructure(['message']);
     }
 
+    /** @test */
     public function testLogout()
     {
         // Create a user for testing
@@ -111,8 +114,7 @@ class JwtAuthControllerTest extends TestCase
         $this->assertEmpty(Cookie::get('jwt_token'));
     }
 
-
-
+    /** @test */
     public function testSendEmailVerification()
     {
         // Create a user for testing
@@ -137,6 +139,7 @@ class JwtAuthControllerTest extends TestCase
         $response->assertJsonStructure(['url']);
     }
 
+    /** @test */
     public function testCreateNewVerificationLink()
     {
         // Create a user for testing
@@ -161,6 +164,7 @@ class JwtAuthControllerTest extends TestCase
         $response->assertJsonStructure(['url']);
     }
 
+    /** @test */
     public function testVerifyEmail()
     {
         // Create a user for testing
@@ -184,11 +188,7 @@ class JwtAuthControllerTest extends TestCase
         $response->assertRedirect('http://example.com/verified-success');
     }
 
-    /**
-     * Test the createUser function.
-     *
-     * @return void
-     */
+    /** @test */
     public function testCreateUser()
     {
         // Define test data for the request
