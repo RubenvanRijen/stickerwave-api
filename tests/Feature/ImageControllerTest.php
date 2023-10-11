@@ -40,7 +40,6 @@ class ImageControllerTest extends TestCase
     }
 
 
-    /** @test */
     public function it_can_list_images_for_a_specific_sticker()
     {
         $sticker = Sticker::factory()->create();
@@ -52,7 +51,6 @@ class ImageControllerTest extends TestCase
             ->assertJsonStructure(['data' => []]);
     }
 
-    /** @test */
     public function it_can_create_an_image_for_a_specific_sticker()
     {
 
@@ -76,7 +74,6 @@ class ImageControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
     public function it_can_update_an_image_for_a_specific_sticker()
     {
         $sticker = Sticker::factory()->create();
@@ -99,7 +96,6 @@ class ImageControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
     public function it_can_delete_an_image_for_a_specific_sticker()
     {
         $sticker = Sticker::factory()->create();

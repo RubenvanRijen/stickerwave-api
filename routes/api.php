@@ -102,11 +102,9 @@ Route::prefix('transactions')->group(
     function ($router) {
         // Retrieve a list of transactions
         Route::get('', [TransactionController::class, 'index'])->middleware(['jwt_full', 'admin']);
-        // Retrieve transactions by a specific user
-        Route::get('/user', [TransactionController::class, 'getUserTransactions'])->middleware(['jwt_full']);
         // Retrieve a specific transaction by ID
-        Route::get('/{id}', [TransactionController::class, 'show'])->middleware(['jwt_full', 'admin']);
-        // Retrieve a transaction by a specific user
-        Route::get('{id}/user', [TransactionController::class, 'getUserTransaction'])->middleware(['jwt_full']);
+        Route::get('/{id}', [TransactionController::class, 'show'])->middleware(['jwt_full'])->where('id', '[0-9]+');
+        // Retrieve the transactions of a specific user
+        Route::get('/user', [TransactionController::class, 'getUserTransactions'])->middleware(['jwt_full']);
     }
 );

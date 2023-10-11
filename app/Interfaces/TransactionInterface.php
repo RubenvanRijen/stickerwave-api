@@ -82,6 +82,10 @@ interface TransactionInterface
      *         response=404,
      *         description="Transaction not found",
      *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No permissions",
+     *     ),
      * )
      */
     public function show($id): JsonResponse;
@@ -116,44 +120,4 @@ interface TransactionInterface
      * )
      */
     public function getUserTransactions(): JsonResponse;
-
-    /**
-     * @OA\Get(
-     *     path="/api/transactions/{id}/user",
-     *     summary="Retrieve a specific transaction by a specific user",
-     *     operationId="getUserTransaction",
-     *     tags={"Transactions"},
-     *     security={{"jwt_token":{}}},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="Transaction ID",
-     *         required=true,
-     *         @OA\Schema(type="integer"),
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="id", type="integer"),
-     *             @OA\Property(property="user_id", type="integer"),
-     *             @OA\Property(property="sticker_id", type="integer"),
-     *             @OA\Property(property="amount", type="number", format="decimal"),
-     *             @OA\Property(property="status", type="string", enum={"pending", "paid", "failed"}),
-     *             @OA\Property(property="created_at", type="string", format="date-time"),
-     *             @OA\Property(property="updated_at", type="string", format="date-time"),
-     *         ),
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized",
-     *     ),
-     *     @OA\Response(
-     *         response=403,
-     *         description="No permissions",
-     *     ),
-     * )
-     */
-    public function getUserTransaction($id): JsonResponse;
 }

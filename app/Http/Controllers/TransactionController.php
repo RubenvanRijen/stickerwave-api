@@ -34,10 +34,17 @@ class TransactionController extends Controller implements TransactionInterface
     {
         // Retrieve the transaction by ID
         $transaction = Transaction::find($id);
+        $loggedInUserId = Auth::id();
+        $user = auth()->user();
 
         if (!$transaction) {
             return response()->json(['error' => 'Transaction not found'], 404);
         }
+
+        if ($transaction->user_id != $loggedInUserId && $user->roles != 'admin') {
+            return response()->json(['error' => 'Unauthorized request'], 403);
+        }
+
 
         return response()->json(['data' => $transaction], 200);
     }
@@ -57,26 +64,5 @@ class TransactionController extends Controller implements TransactionInterface
         $transactions = Transaction::where('user_id', $loggedInUserId)->paginate(10);
 
         return response()->json(['data' => $transactions], 200);
-    }
-
-    /**
-     * Retrieve a psecific transaction by a specific user.
-     *
-     * @param  int  $userId
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getUserTransaction($id): JsonResponse
-    {
-        // Retrieve the transaction by ID
-        $transaction = Transaction::find($id);
-
-        // Check if the logged-in user matches the requested user
-        $loggedInUserId = Auth::id();
-
-        if ($loggedInUserId != $transaction->user_id) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
-        return response()->json(['data' => $transaction], 200);
     }
 }
