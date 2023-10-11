@@ -2,27 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Interfaces\PaymentInterface;
 use App\Models\Sticker;
 use App\Models\Transaction;
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request as HttpRequest;
 use Mollie\Laravel\Facades\Mollie;
 
-class PaymentController extends Controller
+class PaymentController extends Controller implements PaymentInterface
 {
     /**
-     * Redirect the user to the Mollie payment page.
+     * Return the Mollie payment page URL.
      *
      * @param int $stickerId
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function initiatePayment($stickerId)
+    public function initiatePayment($stickerId): JsonResponse
     {
         // Fetch the sticker details, including the price
         $sticker = Sticker::find($stickerId);
 
         if (!$sticker) {
             // Handle sticker not found error
-            return redirect()->back()->with('error', 'Sticker not found');
+            return response()->json(['error' => 'Sticker not found'], 404);
         }
 
         // Create a new payment with Mollie
@@ -32,23 +34,28 @@ class PaymentController extends Controller
                 'value' => number_format($sticker->price, 2), // Format price with two decimal places
             ],
             'description' => 'Purchase of Sticker #' . $sticker->id,
-            'redirectUrl' => route('payment.callback'), // Callback URL
+            'redirectUrl' => route('payment.callback', ['sticker_id' => $sticker->id]), // Callback URL
         ]);
 
-        // Redirect the user to the Mollie payment page
-        return redirect($payment->getCheckoutUrl(), 303);
+        // Return the Mollie payment page URL
+        return response()->json(['payment_url' => $payment->getCheckoutUrl()], 200);
     }
-
     /**
-     * Handle the callback from Mollie after payment.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * Handle the callback from Mollie after payment.*
+     *@param \Illuminate\Http\Request $request
+     *@param int $stickerId
+     *@return \Illuminate\Http\JsonResponse
      */
-    public function handleCallback(Request $request)
+    public function handleCallback(HttpRequest $request, mixed $stickerId): JsonResponse
     {
         // Verify the payment status with Mollie
         $paymentId = $request->input('id');
+        $sticker = Sticker::find($stickerId);
+
+        if (!$sticker) {
+            // Handle sticker not found error
+            return response()->json(['error' => 'Sticker not found'], 404);
+        }
 
         try {
             $payment = Mollie::api()->payments()->get($paymentId);
@@ -66,18 +73,18 @@ class PaymentController extends Controller
 
                 // Update the sticker availability or other logic here
 
-                // Redirect to a success page or display a success message
-                return redirect()->route('payment.success')->with('success', 'Payment successful');
+                // Return a success response
+                return response()->json(['message' => 'Payment successful'], 200);
             } elseif ($payment->isOpen()) {
                 // Payment is still pending
-                return redirect()->route('payment.pending')->with('info', 'Payment is pending');
+                return response()->json(['message' => 'Payment is pending'], 202);
             } else {
                 // Payment failed
-                return redirect()->route('payment.failure')->with('error', 'Payment failed');
+                return response()->json(['error' => 'Payment failed'], 400);
             }
         } catch (\Exception $e) {
             // Handle any exceptions or errors
-            return redirect()->route('payment.failure')->with('error', 'Payment failed');
+            return response()->json(['error' => 'Payment failed'], 500);
         }
     }
 }

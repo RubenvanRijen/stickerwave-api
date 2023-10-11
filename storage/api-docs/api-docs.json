@@ -502,13 +502,13 @@
                                         "description": "Email address",
                                         "type": "string",
                                         "format": "email",
-                                        "example": "john@example.com"
+                                        "example": "admin@example.com"
                                     },
                                     "password": {
                                         "description": "Password",
                                         "type": "string",
                                         "format": "password",
-                                        "example": "password123"
+                                        "example": "password"
                                     }
                                 },
                                 "type": "object"
@@ -1215,6 +1215,174 @@
                                 }
                             }
                         }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt_token": []
+                    }
+                ]
+            }
+        },
+        "/api/payment/sticker/{stickerId}": {
+            "get": {
+                "tags": [
+                    "Payment"
+                ],
+                "summary": "Initiate a payment for a sticker",
+                "operationId": "initiatePayment",
+                "parameters": [
+                    {
+                        "name": "stickerId",
+                        "in": "path",
+                        "description": "ID of the sticker to purchase",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Initiate payment successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "payment_url": {
+                                            "type": "string",
+                                            "example": "https://mollie.com/payment-url"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Sticker not found"
+                    },
+                    "401": {
+                        "description": "No Authorization"
+                    }
+                },
+                "security": [
+                    {
+                        "jwt_token": []
+                    }
+                ]
+            }
+        },
+        "/api/payment/callback/{sticker_id}": {
+            "get": {
+                "tags": [
+                    "Payment"
+                ],
+                "summary": "Handle payment callback from Mollie",
+                "operationId": "handleCallback",
+                "parameters": [
+                    {
+                        "name": "sticker_id",
+                        "in": "path",
+                        "description": "ID of the sticker associated with the payment",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "ID of the payment from Mollie",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payment successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Payment successful"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "202": {
+                        "description": "Payment is pending",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Payment is pending"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Payment failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Payment failed"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Payment failed"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Sticker not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Sticker not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No Authorization"
                     }
                 },
                 "security": [
@@ -2137,6 +2305,10 @@
         {
             "name": "Authentication",
             "description": "Endpoints for user authentication and authorization"
+        },
+        {
+            "name": "Payment",
+            "description": "Endpoints for Payment"
         },
         {
             "name": "Roles",

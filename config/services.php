@@ -32,6 +32,7 @@ return [
     ],
     'mollie' => [
         'api_key' => env('MOLLIE_KEY'),
+        'certificate_path' => storage_path('certificates/cacert.pem'),
     ],
 
 ];

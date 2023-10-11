@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\JwtAuthController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StickerController;
 use App\Http\Controllers\TransactionController;
@@ -108,3 +109,6 @@ Route::prefix('transactions')->group(
         Route::get('/user', [TransactionController::class, 'getUserTransactions'])->middleware(['jwt_full']);
     }
 );
+
+Route::get('/payment/callback/{sticker_id}', [PaymentController::class, 'handleCallback'])->name('payment.callback')->middleware(['jwt_full']);
+Route::get('/payment/sticker/{id}', [PaymentController::class, 'initiatePayment'])->middleware(['jwt_full']);

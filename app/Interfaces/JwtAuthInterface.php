@@ -26,8 +26,8 @@ interface JwtAuthInterface
      *             mediaType="application/json",
      *             @OA\Schema(
      *                 required={"email", "password"},
-     *                 @OA\Property(property="email", type="string", format="email", example="john@example.com", description="Email address"),
-     *                 @OA\Property(property="password", type="string", format="password", example="password123", description="Password"),
+     *                 @OA\Property(property="email", type="string", format="email", example="admin@example.com", description="Email address"),
+     *                 @OA\Property(property="password", type="string", format="password", example="password", description="Password"),
      *             )
      *         )
      *     ),
