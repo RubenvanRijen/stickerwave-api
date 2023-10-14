@@ -24,8 +24,8 @@ class RoleController extends GenericController implements RolesInterface
     {
         // Define the validation rules for the specific model here.
         return [
-            'title' => 'required|max:255|min:3|unique:roles',
-            'description' => 'required|max:255|min:10',
+            'name' => 'required|max:255|min:3|unique:roles',
+            // 'description' => 'required|max:255|min:10',
         ];
     }
 
