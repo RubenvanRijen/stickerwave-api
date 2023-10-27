@@ -19,7 +19,7 @@ class TransactionController extends Controller implements TransactionInterface
     public function index(): JsonResponse
     {
         // Retrieve a paginated list of transactions
-        $transactions = Transaction::paginate(10); // You can adjust the pagination limit as needed
+        $transactions = Transaction::paginate(10); //pagination limit.
 
         return response()->json(['data' => $transactions], 200);
     }

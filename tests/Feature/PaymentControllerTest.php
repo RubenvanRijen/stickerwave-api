@@ -148,9 +148,8 @@ class PaymentControllerTest extends TestCase
         // Mock an exception from Mollie's API by returning a response with a 500 status code
         // This simulates an internal server error on the Mollie API side
 
-        // In this example, we're using Laravel's Http facade to mock the exception, but you can adapt it to your preferred mocking library.
 
-        // Define the URL you want to mock (the Mollie API endpoint you are calling)
+        // Define the URL to mock (the Mollie API endpoint that is being called)
         $mollieApiUrl = 'https://api.mollie.com/v2/payments'; // Replace with your actual URL
 
         // Use Http::fake to set up the mock response

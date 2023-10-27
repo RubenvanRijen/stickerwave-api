@@ -110,7 +110,6 @@ class JwtAuthControllerTest extends TestCase
         // Assert that the response status is 200 (or the appropriate status code)
         $response->assertStatus(200);
 
-        // Alternatively, you can assert that the cookie value is empty
         $this->assertEmpty(Cookie::get('jwt_token'));
     }
 

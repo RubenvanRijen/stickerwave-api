@@ -17,7 +17,6 @@ class CheckRoleMiddleware
     {
         if (!auth()->user()->hasRole('admin')) {
             return response()->json(['error' => "You don't have permission"], 403);
-            // Handle unauthorized access here (e.g., return a 403 Forbidden response)
         }
 
         return $next($request);

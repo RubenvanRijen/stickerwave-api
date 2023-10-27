@@ -73,7 +73,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class, 'roles_users'); // Specify the custom pivot table name
+        return $this->belongsToMany(Role::class, 'roles_users'); 
     }
 
     public function hasRole($roleName)

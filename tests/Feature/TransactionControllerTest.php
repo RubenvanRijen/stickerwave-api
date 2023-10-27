@@ -27,7 +27,6 @@ class TransactionControllerTest extends TestCase
     {
         parent::setUp();
 
-        // set the authentication for certain specific routes.
         Artisan::call('db:seed', ['--class' => RolesTableSeeder::class]);
         $this->createAdminUser();
         $this->createNormalUser();

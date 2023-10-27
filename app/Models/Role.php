@@ -18,6 +18,6 @@ class Role extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'roles_users'); // Specify the custom pivot table name
+        return $this->belongsToMany(User::class, 'roles_users');
     }
 }

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('status', ['pending', 'paid', 'failed'])->default('pending');
             $table->timestamps();
 
-            // Define foreign keys
+            // Defined foreign keys
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('sticker_id')->references('id')->on('stickers');
         });
