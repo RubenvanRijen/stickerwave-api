@@ -18,11 +18,10 @@ class ImageFactory extends Factory
     public function definition(): array
     {
         return [
-            'filename' => $this->faker->word . '.jpg', // You can adjust this to generate suitable filenames.
+            'filename' => $this->faker->word . '.jpg', 
             'mime' => 'image/jpeg',
-            'data' => base64_encode(file_get_contents(public_path('seederImages/pikachu.jpg'))), // Replace with actual image data
+            'data' => base64_encode(file_get_contents(public_path('seederImages/pikachu.jpg'))),
             'sticker_id' => function () {
-                // Assuming you have Sticker records in the database, select a random sticker ID.
                 return Sticker::inRandomOrder()->first()->id;
             },
         ];
