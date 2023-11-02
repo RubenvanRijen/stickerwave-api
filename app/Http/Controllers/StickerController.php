@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Interfaces\StickerInterface;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 use App\Models\Sticker;
+use Illuminate\Http\JsonResponse;
 
 class StickerController extends GenericController implements StickerInterface
 {
@@ -44,5 +45,17 @@ class StickerController extends GenericController implements StickerInterface
             'description' => 'required|max:255|min:10',
             'price' => 'required|numeric|min:0.01',
         ];
+    }
+
+    /**
+     * get the stickers with a certain categoryId.
+     *
+     * @param integer $categoryId
+     * @return JsonResponse
+     */
+    public function getStickersByCategory(int $categoryId): JsonResponse
+    {
+        $stickers = $this->model->find($categoryId)->stickers;
+        return response()->json($stickers);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use App\Models\Role;
 use App\Models\Sticker;
 use App\Models\User;
@@ -149,5 +150,32 @@ class StickerControllerTest extends TestCase
             'description' => 'Delete this sticker.',
             'price' => 10.30
         ]);
+    }
+
+    /** @test */
+    public function it_can_show_stickers_of_category()
+    {
+        $categoryId = 1;
+        // Mocking the Sticker model and its behavior
+        $stickerModel = $this->mock(Sticker::class);
+        $categoryModel = $this->mock(Category::class);
+        $stickerModel->categories()->attach($categoryModel->id);
+
+        $stickerModel->shouldReceive('find')->with($categoryId)->andReturn(new Sticker());
+
+        $response = $this->get('api/stickers/category/' . $categoryId);
+
+        $response->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonStructure([
+                '*' => [
+                    'id',
+                    'title',
+                    'description',
+                    'price',
+                    'created_at',
+                    'updated_at'
+                ]
+            ]);
     }
 }

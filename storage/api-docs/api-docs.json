@@ -2077,6 +2077,60 @@
                 ]
             }
         },
+        "/api/stickers/category/{categoryId}": {
+            "get": {
+                "tags": [
+                    "Stickers"
+                ],
+                "summary": "Get stickers by Category ID",
+                "operationId": "0a0636da5519f76a3927fffc30adc58f",
+                "parameters": [
+                    {
+                        "name": "categoryId",
+                        "in": "path",
+                        "description": "ID of the category",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "title": {
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "type": "string"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/transactions": {
             "get": {
                 "tags": [
@@ -2282,6 +2336,11 @@
         }
     },
     "components": {
+        "responses": {
+            "404": {
+                "description": "Category not found"
+            }
+        },
         "securitySchemes": {
             "jwt_token": {
                 "type": "http",

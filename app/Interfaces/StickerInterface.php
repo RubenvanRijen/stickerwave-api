@@ -215,4 +215,40 @@ interface StickerInterface
      * )
      */
     public function destroy(mixed $id): JsonResponse;
+
+    /**
+     * @OA\Get(
+     *     path="/api/stickers/category/{categoryId}",
+     *     summary="Get stickers by Category ID",
+     *     tags={"Stickers"},
+     *     @OA\Parameter(
+     *         name="categoryId",
+     *         in="path",
+     *         description="ID of the category",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="title", type="string"),
+     *                 @OA\Property(property="description", type="string"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time")
+     *             )
+     *           )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Category not found"
+     *     )
+     * )
+     */
+    public function getStickersByCategory(int $categoryId): JsonResponse;
 }

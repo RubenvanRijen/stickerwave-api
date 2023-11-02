@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Sticker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Faker\Factory as Faker;
 
 
 class StickerTableSeeder extends Seeder
@@ -35,5 +37,15 @@ class StickerTableSeeder extends Seeder
                 'price' => 13.30
             ],
         ]);
+
+        $faker = Faker::create();
+
+        for ($i = 0; $i < 10; $i++) {
+            Sticker::create([
+                'title' => $faker->word,
+                'description' => $faker->sentence,
+                'price' => $faker->randomFloat(2, 1, 100) // Random price between 1 and 100 with 2 decimal places
+            ]);
+        }
     }
 }

@@ -48,6 +48,8 @@ Route::prefix('stickers')->group(
     function ($router) {
         // Route to get a list of all stickers
         Route::get('/', [StickerController::class, 'index']);
+        // Route to get a list of all stickers by categoryId
+        Route::get('/category/{categoryId}', [StickerController::class, 'getStickersByCategory']);
         // Route to get a specific sticker by ID
         Route::get('/{id}', [StickerController::class, 'show']);
         // Route to create a new sticker
