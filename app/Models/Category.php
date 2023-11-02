@@ -18,6 +18,6 @@ class Category extends Model
 
     public function stickers()
     {
-        return $this->belongsToMany(Sticker::class);
+        return $this->belongsToMany(Sticker::class, 'sticker_category');
     }
 }

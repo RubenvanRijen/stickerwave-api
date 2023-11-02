@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Interfaces\StickerInterface;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Sticker;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class StickerController extends GenericController implements StickerInterface
 {
@@ -55,7 +57,70 @@ class StickerController extends GenericController implements StickerInterface
      */
     public function getStickersByCategory(int $categoryId): JsonResponse
     {
-        $stickers = $this->model->find($categoryId)->stickers;
-        return response()->json($stickers);
+        $stickers = Sticker::whereHas('categories', function ($query) use ($categoryId) {
+            $query->where('id', $categoryId);
+        })->paginate(10);
+
+        return response()->json(['data' => $stickers], 200);
+    }
+
+
+    /**
+     * get the stickers with a certain categoryId.
+     *
+     * @param int $stickerId
+     * @return JsonResponse
+     */
+    public function attachCategoryToSticker(Request $request, int $stickerId): JsonResponse
+    {
+        $sticker = Sticker::find($stickerId);
+
+        if (!$sticker) {
+            return response()->json(['error' => 'Sticker not found'], 404);
+        }
+
+        $categories = $request->input('category_ids', []);
+
+        foreach ($categories as $categoryId) {
+            $category = Category::find($categoryId);
+
+            if (!$category) {
+                return response()->json(['error' => "Category with ID $categoryId not found"], 404);
+            }
+
+            $sticker->categories()->syncWithoutDetaching($categoryId);
+        }
+
+        return response()->json(['data' => $sticker], 200);
+    }
+
+
+    /**
+     * get the stickers with a certain categoryId.
+     *
+     * @param int $stickerId
+     * @return JsonResponse
+     */
+    public function detachCategoryToSticker(Request $request, int $stickerId): JsonResponse
+    {
+        $sticker = Sticker::find($stickerId);
+
+        if (!$sticker) {
+            return response()->json(['error' => 'Sticker not found'], 404);
+        }
+
+        $categories = $request->input('category_ids', []);
+
+        foreach ($categories as $categoryId) {
+            $category = Category::find($categoryId);
+
+            if (!$category) {
+                return response()->json(['error' => "Category with ID $categoryId not found"], 404);
+            }
+
+            $sticker->categories()->detach($categoryId);
+        }
+
+        return response()->json(['data' => $sticker], 200);
     }
 }
