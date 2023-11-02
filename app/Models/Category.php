@@ -16,8 +16,8 @@ class Category extends Model
      */
     protected $fillable = ['title'];
 
-    public function sticker()
+    public function stickers()
     {
-        return $this->belongsToMany(Sticker::class);
+        return $this->belongsToMany(Sticker::class, 'sticker_category');
     }
 }

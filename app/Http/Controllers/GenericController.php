@@ -85,7 +85,7 @@ abstract class GenericController extends Controller
         $item->update($validatedData);
 
         // Return a JSON response with the updated item.
-        return response()->json($item);
+        return response()->json($item, 200);
     }
 
     /**

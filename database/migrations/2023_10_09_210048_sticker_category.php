@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('sticker_category', function (Blueprint $table) {
             $table->foreignId('sticker_id')->constrained('stickers');
             $table->foreignId('category_id')->constrained('categories');
+            $table->timestamps();
         });
     }
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use App\Models\Role;
 use App\Models\Sticker;
 use App\Models\User;
@@ -149,5 +150,82 @@ class StickerControllerTest extends TestCase
             'description' => 'Delete this sticker.',
             'price' => 10.30
         ]);
+    }
+
+    /** @test */
+    public function it_can_show_stickers_of_category()
+    { // Create a category
+        $category = Category::factory()->create();
+
+        // Create stickers related to the category
+        Sticker::factory(10)->create()->each(function ($sticker) use ($category) {
+            $sticker->categories()->attach($category);
+        });
+
+        // Request stickers by category ID
+        $response = $this->get('api/stickers/category/' . $category->id);
+
+        $response->assertStatus(200)
+            ->assertJsonCount(13, 'data');
+    }
+
+    /** @test */
+    public function it_attaches_categories_to_sticker()
+    {
+        $sticker = Sticker::factory()->create();
+        $categories = Category::factory(3)->create();
+        $categoryIds = $categories->pluck('id')->toArray();
+
+        $response = $this->put("api/stickers/{$sticker->id}/categories/attach", ['category_ids' => $categoryIds]);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    // Other expected fields
+                ]
+            ]);
+
+        foreach ($categoryIds as $categoryId) {
+            $this->assertDatabaseHas('sticker_category', [
+                'category_id' => $categoryId,
+                'sticker_id' => $sticker->id,
+            ]);
+        }
+    }
+
+    /** @test */
+    public function it_detaches_categories_from_sticker()
+    {
+        // Create a sticker
+        $sticker = Sticker::factory()->create();
+
+        // Create categories
+        $categories = Category::factory(3)->create();
+
+        // Attach categories to the sticker
+        $sticker->categories()->sync($categories);
+
+        // Get category IDs attached to the sticker
+        $categoryIds = $categories->pluck('id')->toArray();
+
+        // Detach categories from the sticker
+        $response = $this->put("api/stickers/{$sticker->id}/categories/detach", ['category_ids' => $categoryIds]);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    // Add other expected fields here
+                ]
+            ]);
+
+        // Ensure the categories are detached from the sticker
+        foreach ($categoryIds as $categoryId) {
+            $this->assertDatabaseMissing('sticker_category', [
+                'category_id' => $categoryId,
+                'sticker_id' => $sticker->id,
+            ]);
+        }
     }
 }

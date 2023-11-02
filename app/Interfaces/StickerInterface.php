@@ -215,4 +215,142 @@ interface StickerInterface
      * )
      */
     public function destroy(mixed $id): JsonResponse;
+
+    /**
+     * @OA\Get(
+     *     path="/api/stickers/category/{categoryId}",
+     *     summary="Get stickers by Category ID",
+     *     tags={"Stickers"},
+     *     @OA\Parameter(
+     *         name="categoryId",
+     *         in="path",
+     *         description="ID of the category",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="title", type="string"),
+     *                 @OA\Property(property="description", type="string"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time")
+     *             )
+     *           )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Category not found"
+     *     )
+     * )
+     */
+    public function getStickersByCategory(int $categoryId): JsonResponse;
+
+    /**
+     * @OA\PUT(
+     *     path="/api/stickers/{stickerId}/categories/attach",
+     *     summary="Attach categories to a sticker",
+     *     tags={"Stickers"},
+     *     security={{"jwt_token":{}}},
+     *     @OA\Parameter(
+     *         name="stickerId",
+     *         in="path",
+     *         description="ID of the sticker",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="category_ids",
+     *                 type="array",
+     *                 @OA\Items(type="integer")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Sticker updated successfully",
+     *     @OA\JsonContent(
+     *         type="object",
+     *         @OA\Property(property="id", type="integer"),
+     *         @OA\Property(property="title", type="string"),
+     *         @OA\Property(property="description", type="string"),
+     *         @OA\Property(property="created_at", type="string", format="date-time"),
+     *         @OA\Property(property="updated_at", type="string", format="date-time")
+     *     )
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Sticker or category not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="error", type="string")
+     *         )
+     *     )
+     * )
+     */
+    public function attachCategoryToSticker(Request $request, int $stickerId): JsonResponse;
+
+    /**
+     * @OA\Put(
+     *     path="/stickers/{stickerId}/categories/detach",
+     *     summary="Detach categories from a sticker",
+     *     tags={"Stickers"},
+     *     security={{"jwt_token":{}}},
+     *     @OA\Parameter(
+     *         name="stickerId",
+     *         in="path",
+     *         description="ID of the sticker",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="category_ids",
+     *                 type="array",
+     *                 @OA\Items(type="integer")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Sticker updated successfully",
+     *     @OA\JsonContent(
+     *         type="object",
+     *         @OA\Property(property="id", type="integer"),
+     *         @OA\Property(property="title", type="string"),
+     *         @OA\Property(property="description", type="string"),
+     *         @OA\Property(property="created_at", type="string", format="date-time"),
+     *         @OA\Property(property="updated_at", type="string", format="date-time")
+     *     )
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Sticker or category not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="error", type="string")
+     *         )
+     *     )
+     * )
+     */
+    public function detachCategoryToSticker(Request $request, int $stickerId): JsonResponse;
 }
