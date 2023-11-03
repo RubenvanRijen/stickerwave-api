@@ -224,7 +224,7 @@ interface RolesInterface
 
     /**
      * @OA\Post(
-     *     path="/roles/{roleId}/user/attach/{userId}",
+     *     path="/api/roles/{roleId}/user/attach/{userId}",
      *     summary="Attach a role to a user",
      *     description="Associates a specific role with a user.",
      *     tags={"Roles"},
@@ -299,7 +299,7 @@ interface RolesInterface
 
     /**
      * @OA\Delete(
-     *     path="/roles/{roleId}/user/detach/{userId}",
+     *     path="/api/roles/{roleId}/user/detach/{userId}",
      *     summary="Detach a role from a user",
      *     description="Removes a specific role from a user.",
      *     tags={"Roles"},

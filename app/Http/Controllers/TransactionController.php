@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Interfaces\TransactionInterface;
 use App\Models\Transaction;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
 

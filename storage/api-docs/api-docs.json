@@ -1224,34 +1224,42 @@
                 ]
             }
         },
-        "/api/payment/sticker/{stickerId}": {
-            "get": {
+        "/api/payment/sticker": {
+            "post": {
                 "tags": [
                     "Payment"
                 ],
-                "summary": "Initiate a payment for a sticker",
-                "operationId": "initiatePayment",
-                "parameters": [
-                    {
-                        "name": "stickerId",
-                        "in": "path",
-                        "description": "ID of the sticker to purchase",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
+                "summary": "Initiate payment for stickers",
+                "description": "Initiates the payment process for stickers.",
+                "operationId": "6d1465feb4797e8b57b3045426574d2c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "sticker_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
                         }
                     }
-                ],
+                },
                 "responses": {
                     "200": {
-                        "description": "Initiate payment successfully",
+                        "description": "Returns the payment URL for the sticker purchase.",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "payment_url": {
-                                            "type": "string",
-                                            "example": "https://mollie.com/payment-url"
+                                            "description": "URL for the payment process",
+                                            "type": "string"
                                         }
                                     },
                                     "type": "object"
@@ -1259,11 +1267,21 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Sticker not found"
-                    },
-                    "401": {
-                        "description": "No Authorization"
+                    "400": {
+                        "description": "Invalid sticker ID",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "description": "Error message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -1273,33 +1291,25 @@
                 ]
             }
         },
-        "/api/payment/callback/{sticker_id}": {
-            "get": {
+        "/api/payment/callback": {
+            "post": {
                 "tags": [
                     "Payment"
                 ],
-                "summary": "Handle payment callback from Mollie",
-                "operationId": "handleCallback",
-                "parameters": [
-                    {
-                        "name": "sticker_id",
-                        "in": "path",
-                        "description": "ID of the sticker associated with the payment",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "id",
-                        "in": "query",
-                        "description": "ID of the payment from Mollie",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                "summary": "Handle Mollie payment callback",
+                "description": "Handles the callback from Mollie after payment processing.",
+                "operationId": "385e1550f12b28d382d483da3078e19d",
+                "requestBody": {
+                    "description": "Mollie payment callback data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
                         }
                     }
-                ],
+                },
                 "responses": {
                     "200": {
                         "description": "Payment successful",
@@ -1308,8 +1318,8 @@
                                 "schema": {
                                     "properties": {
                                         "message": {
-                                            "type": "string",
-                                            "example": "Payment successful"
+                                            "description": "Success message",
+                                            "type": "string"
                                         }
                                     },
                                     "type": "object"
@@ -1324,8 +1334,8 @@
                                 "schema": {
                                     "properties": {
                                         "message": {
-                                            "type": "string",
-                                            "example": "Payment is pending"
+                                            "description": "Pending message",
+                                            "type": "string"
                                         }
                                     },
                                     "type": "object"
@@ -1340,8 +1350,8 @@
                                 "schema": {
                                     "properties": {
                                         "error": {
-                                            "type": "string",
-                                            "example": "Payment failed"
+                                            "description": "Error message",
+                                            "type": "string"
                                         }
                                     },
                                     "type": "object"
@@ -1350,39 +1360,20 @@
                         }
                     },
                     "500": {
-                        "description": "Internal server error",
+                        "description": "Server error",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "error": {
-                                            "type": "string",
-                                            "example": "Payment failed"
+                                            "description": "Error message",
+                                            "type": "string"
                                         }
                                     },
                                     "type": "object"
                                 }
                             }
                         }
-                    },
-                    "404": {
-                        "description": "Sticker not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "error": {
-                                            "type": "string",
-                                            "example": "Sticker not found"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "No Authorization"
                     }
                 },
                 "security": [
@@ -1701,14 +1692,14 @@
                 ]
             }
         },
-        "/roles/{roleId}/user/attach/{userId}": {
+        "/api/roles/{roleId}/user/attach/{userId}": {
             "post": {
                 "tags": [
                     "Roles"
                 ],
                 "summary": "Attach a role to a user",
                 "description": "Associates a specific role with a user.",
-                "operationId": "dda555ea89f2c530d2718be831c277dd",
+                "operationId": "a1c35c378684cfd1afec1b39c404ff19",
                 "parameters": [
                     {
                         "name": "roleId",
@@ -1786,14 +1777,14 @@
                 }
             }
         },
-        "/roles/{roleId}/user/detach/{userId}": {
+        "/api/roles/{roleId}/user/detach/{userId}": {
             "delete": {
                 "tags": [
                     "Roles"
                 ],
                 "summary": "Detach a role from a user",
                 "description": "Removes a specific role from a user.",
-                "operationId": "c56eb5d9e697c40b94cc4b27cf3aec64",
+                "operationId": "4d1ab56be419d898113912eef7281f47",
                 "parameters": [
                     {
                         "name": "roleId",

@@ -120,5 +120,5 @@ Route::prefix('transactions')->group(
     }
 );
 
-Route::get('/payment/callback/{sticker_id}', [PaymentController::class, 'handleCallback'])->name('payment.callback')->middleware(['jwt_full']);
-Route::get('/payment/sticker/{id}', [PaymentController::class, 'initiatePayment'])->middleware(['jwt_full']);
+Route::post('/payment/callback', [PaymentController::class, 'handleCallback'])->name('payment.callback')->middleware(['jwt_full']);
+Route::post('/payment/sticker', [PaymentController::class, 'initiatePayment'])->middleware(['jwt_full']);

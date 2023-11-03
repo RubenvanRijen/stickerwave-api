@@ -8,73 +8,83 @@ use App\Models\Transaction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request as HttpRequest;
 use Mollie\Laravel\Facades\Mollie;
+use Illuminate\Http\Request;
 
 class PaymentController extends Controller implements PaymentInterface
 {
     /**
-     * Return the Mollie payment page URL.
+     * create the payment url.
      *
-     * @param int $stickerId
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function initiatePayment($stickerId): JsonResponse
+    public function initiatePayment(Request $request): JsonResponse
     {
-        // Fetch the sticker details, including the price
-        $sticker = Sticker::find($stickerId);
+        // Fetch sticker IDs from the request
+        $stickerIds = $request->input('sticker_ids');
 
-        if (!$sticker) {
-            // Handle sticker not found error
-            return response()->json(['error' => 'Sticker not found'], 404);
+        // Fetch sticker details, including the price, for all sticker IDs
+        $stickers = Sticker::find($stickerIds);
+
+        // Validate sticker existence and calculate total price
+        if (count($stickers) !== count($stickerIds)) {
+            return response()->json(['error' => 'Invalid sticker ID'], 400);
+        }
+
+        $totalPrice = 0;
+        foreach ($stickers as $sticker) {
+            $totalPrice += $sticker->price;
         }
 
         // Create a new payment with Mollie
         $payment = Mollie::api()->payments()->create([
             'amount' => [
-                'currency' => 'EUR', // Adjust currency as needed
-                'value' => number_format($sticker->price, 2), // Format price with two decimal places
+                'currency' => 'EUR',
+                'value' => number_format($totalPrice, 2),
             ],
-            'description' => 'Purchase of Sticker #' . $sticker->id,
-            'redirectUrl' => route('payment.callback', ['sticker_id' => $sticker->id]), // Callback URL
+            'description' => 'Purchase of Stickers',
+            'redirectUrl' => route('payment.callback'), // Callback URL
+            'metadata' => [
+                'sticker_ids' => $stickerIds, // Include sticker IDs in metadata
+            ],
         ]);
 
         // Return the Mollie payment page URL
         return response()->json(['payment_url' => $payment->getCheckoutUrl()], 200);
     }
     /**
-     * Handle the callback from Mollie after payment.*
-     *@param \Illuminate\Http\Request $request
-     *@param int $stickerId
-     *@return \Illuminate\Http\JsonResponse
+     * Handle the callback from Mollie after payment.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function handleCallback(HttpRequest $request, mixed $stickerId): JsonResponse
+    public function handleCallback(HttpRequest $request): JsonResponse
     {
-        // Verify the payment status with Mollie
-        $paymentId = $request->input('id');
-        $sticker = Sticker::find($stickerId);
-
-        if (!$sticker) {
-            // Handle sticker not found error
-            return response()->json(['error' => 'Sticker not found'], 404);
-        }
-
         try {
+            $paymentId = $request->input('id');
             $payment = Mollie::api()->payments()->get($paymentId);
 
             if ($payment->isPaid()) {
-                // Payment was successful
+                $metadata = $payment->metadata ?? [];
 
-                // Create a new transaction record
-                $transaction = new Transaction();
-                $transaction->user_id = auth()->user()->id;
-                $transaction->sticker_id = $sticker->id;
-                $transaction->amount = $sticker->price;
-                $transaction->status = 'paid';
-                $transaction->save();
+                if (isset($metadata->sticker_ids) && is_array($metadata->sticker_ids)) {
+                    foreach ($metadata->sticker_ids as $stickerId) {
+                        $sticker = Sticker::find($stickerId);
 
-                // Update the sticker availability or other logic here
+                        if ($sticker) {
+                            $transaction = new Transaction();
+                            $transaction->user_id = auth()->user()->id;
+                            $transaction->sticker_id = $sticker->id;
+                            $transaction->amount = $sticker->price;
+                            $transaction->status = 'paid';
+                            $transaction->save();
+                        }
+                    }
 
-                // Return a success response
-                return response()->json(['message' => 'Payment successful'], 200);
+                    return response()->json(['message' => 'Payment successful'], 200);
+                } else {
+                    return response()->json(['error' => 'Invalid sticker IDs in metadata'], 400);
+                }
             } elseif ($payment->isOpen()) {
                 // Payment is still pending
                 return response()->json(['message' => 'Payment is pending'], 202);
