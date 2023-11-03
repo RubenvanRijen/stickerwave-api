@@ -1224,6 +1224,54 @@
                 ]
             }
         },
+        "/api/auth/roles": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Get the roles of the logged-in user",
+                "description": "Retrieve roles of the currently authenticated user",
+                "operationId": "9398ea42d6bdb6c0ec27bb4de16470b7",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Role ID",
+                                                "type": "integer",
+                                                "format": "int64"
+                                            },
+                                            "title": {
+                                                "description": "Role title",
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "description": "Role description",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "jwt_token": []
+                    }
+                ]
+            }
+        },
         "/api/payment/sticker": {
             "post": {
                 "tags": [
@@ -1462,25 +1510,22 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "id": {
-                                                "description": "Role ID",
-                                                "type": "integer",
-                                                "format": "int64"
-                                            },
-                                            "title": {
-                                                "description": "Role title",
-                                                "type": "string"
-                                            },
-                                            "description": {
-                                                "description": "Role description",
-                                                "type": "string"
-                                            }
+                                    "properties": {
+                                        "id": {
+                                            "description": "Role ID",
+                                            "type": "integer",
+                                            "format": "int64"
                                         },
-                                        "type": "object"
-                                    }
+                                        "title": {
+                                            "description": "Role title",
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "description": "Role description",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -1527,25 +1572,22 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "id": {
-                                                "description": "Role ID",
-                                                "type": "integer",
-                                                "format": "int64"
-                                            },
-                                            "title": {
-                                                "description": "Role title",
-                                                "type": "string"
-                                            },
-                                            "description": {
-                                                "description": "Role description",
-                                                "type": "string"
-                                            }
+                                    "properties": {
+                                        "id": {
+                                            "description": "Role ID",
+                                            "type": "integer",
+                                            "format": "int64"
                                         },
-                                        "type": "object"
-                                    }
+                                        "title": {
+                                            "description": "Role title",
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "description": "Role description",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -1611,25 +1653,22 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "id": {
-                                                "description": "Role ID",
-                                                "type": "integer",
-                                                "format": "int64"
-                                            },
-                                            "title": {
-                                                "description": "Role title",
-                                                "type": "string"
-                                            },
-                                            "description": {
-                                                "description": "Role description",
-                                                "type": "string"
-                                            }
+                                    "properties": {
+                                        "id": {
+                                            "description": "Role ID",
+                                            "type": "integer",
+                                            "format": "int64"
                                         },
-                                        "type": "object"
-                                    }
+                                        "title": {
+                                            "description": "Role title",
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "description": "Role description",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }

@@ -226,6 +226,23 @@ class JwtAuthController extends Controller implements JwtAuthInterface
     }
 
     /**
+     * Get the roles of a user.
+     *
+     * @return JsonResponse
+     */
+    public function getUserRoles(): JsonResponse
+    {
+        if (auth()->check()) {
+            $loggedInUser = auth()->user();
+            $roles = $loggedInUser->roles;
+
+            return response()->json(['roles' => $roles]);
+        } else {
+            return response()->json(['error' => 'User not authenticated'], 401);
+        }
+    }
+
+    /**
      * create a user for an admin.
      */
     public function createUser(Request $request): JsonResponse
@@ -252,7 +269,7 @@ class JwtAuthController extends Controller implements JwtAuthInterface
         ));
         $user->verification_token = Str::random(40);
         $role = Role::where('name', $validatedData['role'])->first();
-        if(!$role){
+        if (!$role) {
             return response()->json(['message' => 'no role found with that name'], 404);
         }
         $user->roles()->attach($role);

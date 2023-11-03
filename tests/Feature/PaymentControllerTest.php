@@ -49,7 +49,7 @@ class PaymentControllerTest extends TestCase
     {
         $sticker = Sticker::factory()->create();
 
-        $response = $this->get("/api/payment/sticker/{$sticker->id}", $this->adminHeaders);
+        $response = $this->post("/api/payment/sticker", ['sticker_ids' => [$sticker->id]], $this->adminHeaders);
 
         $response->assertStatus(200)
             ->assertJsonStructure(['payment_url']);
@@ -58,10 +58,10 @@ class PaymentControllerTest extends TestCase
     /** @test */
     public function testInitiatePaymentWithNonExistentSticker(): void
     {
-        $response = $this->get('/api/payment/sticker/999',  $this->adminHeaders);
+        $response = $this->post('/api/payment/sticker', ['sticker_ids' => [999999]], $this->adminHeaders);
 
-        $response->assertStatus(404)
-            ->assertJson(['error' => 'Sticker not found']);
+        $response->assertStatus(400)
+            ->assertJson(['error' => 'Invalid sticker ID']);
     }
 
     // /** @test */

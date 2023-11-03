@@ -208,4 +208,33 @@ class JwtAuthControllerTest extends TestCase
         // Assert that the response JSON contains the expected message
         $response->assertJson(['message' => 'User successfully registered']);
     }
+
+    /** @test */
+    public function it_returns_roles_if_user_is_authenticated()
+    {
+        // Mock an authenticated user
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        // Call the endpoint
+        $response = $this->get('/api/auth/roles');
+
+        // Assert the response
+        $response->assertStatus(200);
+        $response->assertJsonStructure(['roles']);
+    }
+
+    /** @test */
+    public function it_returns_unauthenticated_error_if_user_is_not_authenticated()
+    {
+        // Ensure there's no authenticated user
+        $this->assertGuest();
+
+        // Call the endpoint
+        $response = $this->get('/api/auth/roles');
+
+        // Assert the response
+        $response->assertStatus(401);
+        $response->assertJson(['error' => 'User not authenticated']);
+    }
 }

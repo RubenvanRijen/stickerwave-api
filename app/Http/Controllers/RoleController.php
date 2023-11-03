@@ -44,8 +44,7 @@ class RoleController extends GenericController implements RolesInterface
         ];
     }
 
-
-    /**
+     /**
      * attach a role to a user.
      *
      * @param Request $request

@@ -60,12 +60,10 @@ interface RolesInterface
      *         response=201,
      *         description="Role created successfully",
      *          @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(
+     *              type="object",
      *                 @OA\Property(property="id", type="integer", format="int64", description="Role ID"),
      *                 @OA\Property(property="title", type="string", description="Role title"),
      *                 @OA\Property(property="description", type="string", description="Role description"),
-     *             )
      *         ),
      *     ),
      *     @OA\Response(
@@ -104,13 +102,11 @@ interface RolesInterface
      *     @OA\Response(
      *         response=200,
      *         description="Role details",
-     *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(
+     *          @OA\JsonContent(
+     *              type="object",
      *                 @OA\Property(property="id", type="integer", format="int64", description="Role ID"),
      *                 @OA\Property(property="title", type="string", description="Role title"),
      *                 @OA\Property(property="description", type="string", description="Role description"),
-     *             )
      *         ),
      *     ),
      *     @OA\Response(
@@ -156,13 +152,11 @@ interface RolesInterface
      *     @OA\Response(
      *         response=200,
      *         description="Role updated successfully",
-     *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(
+     *          @OA\JsonContent(
+     *              type="object",
      *                 @OA\Property(property="id", type="integer", format="int64", description="Role ID"),
      *                 @OA\Property(property="title", type="string", description="Role title"),
      *                 @OA\Property(property="description", type="string", description="Role description"),
-     *             )
      *         ),
      *     ),
      *     @OA\Response(

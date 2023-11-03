@@ -345,4 +345,30 @@ interface JwtAuthInterface
      * )
      */
     public function createUser(Request $request): JsonResponse;
+    /**
+     * @OA\Get(
+     *     path="/api/auth/roles",
+     *     tags={"Authentication"},
+     *     security={{ "jwt_token": {} }},
+     *     summary="Get the roles of the logged-in user",
+     *     description="Retrieve roles of the currently authenticated user",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id", type="integer", format="int64", description="Role ID"),
+     *                 @OA\Property(property="title", type="string", description="Role title"),
+     *                 @OA\Property(property="description", type="string", description="Role description"),
+     *             )
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *     ),
+     * )
+     */
+    public function getUserRoles(): JsonResponse;
 }
