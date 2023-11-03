@@ -132,4 +132,47 @@ class RoleControllertest extends TestCase
             'name' => 'To Be Deleted'
         ]);
     }
+
+    /** @test */
+    public function it_can_detach_a_role_from_a_user()
+    {
+        // Create a user and a role
+        $user = User::factory()->create();
+        $role = Role::factory()->create();
+
+        // Attach the role to the user
+        $user->roles()->attach($role);
+
+        // Call the API to detach the role
+        $response = $this->delete("/api/roles/{$role->id}/user/detach/{$user->id}", [], $this->headers);
+
+        // Assert a successful response
+        $response->assertStatus(200);
+
+        // Check if the role is detached from the user
+        $this->assertDatabaseMissing('roles_users', [
+            'user_id' => $user->id,
+            'role_id' => $role->id,
+        ]);
+    }
+
+    /** @test */
+    public function it_can_attach_a_role_to_a_user()
+    {
+        // Create a user and a role
+        $user = User::factory()->create();
+        $role = Role::factory()->create();
+
+        // Call the API to attach the role to the user
+        $response = $this->post("/api/roles/{$role->id}/user/attach/{$user->id}", [], $this->headers);
+
+        // Assert a successful response
+        $response->assertStatus(200);
+
+        // Check if the role is attached to the user
+        $this->assertDatabaseHas('roles_users', [
+            'user_id' => $user->id,
+            'role_id' => $role->id,
+        ]);
+    }
 }

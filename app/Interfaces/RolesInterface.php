@@ -221,4 +221,154 @@ interface RolesInterface
      * )
      */
     public function destroy(mixed $id): JsonResponse;
+
+    /**
+     * @OA\Post(
+     *     path="/roles/{roleId}/user/attach/{userId}",
+     *     summary="Attach a role to a user",
+     *     description="Associates a specific role with a user.",
+     *     tags={"Roles"},
+     *     @OA\Parameter(
+     *         name="roleId",
+     *         in="path",
+     *         description="ID of the role to attach",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             example="123"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="userId",
+     *         in="path",
+     *         description="ID of the user to whom the role will be attached",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             example="456"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Role attached successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 description="User data after attachment",
+     *                 @OA\Property(
+     *                     property="id",
+     *                     type="integer",
+     *                     description="User ID"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="name",
+     *                     type="string",
+     *                     description="User's name"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="email",
+     *                     type="string",
+     *                     description="User's email"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="email_verified_at",
+     *                     type="string",
+     *                     format="date-time",
+     *                     description="Timestamp of email verification"
+     *                 ),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Role or user not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *                 description="Error message"
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function attachRoleToUser(Request $request, int $roleId, int $userId): JsonResponse;
+
+    /**
+     * @OA\Delete(
+     *     path="/roles/{roleId}/user/detach/{userId}",
+     *     summary="Detach a role from a user",
+     *     description="Removes a specific role from a user.",
+     *     tags={"Roles"},
+     *     @OA\Parameter(
+     *         name="roleId",
+     *         in="path",
+     *         description="ID of the role to detach",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             example="123"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="userId",
+     *         in="path",
+     *         description="ID of the user from whom the role will be detached",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             example="456"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Role detached successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 description="User data after detachment",
+     *                 @OA\Property(
+     *                     property="id",
+     *                     type="integer",
+     *                     description="User ID"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="name",
+     *                     type="string",
+     *                     description="User's name"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="email",
+     *                     type="string",
+     *                     description="User's email"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="email_verified_at",
+     *                     type="string",
+     *                     format="date-time",
+     *                     description="Timestamp of email verification"
+     *                 ),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Role or user not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *                 description="Error message"
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function detachRoleOfUser(Request $request, int $roleId, int $userId): JsonResponse;
 }

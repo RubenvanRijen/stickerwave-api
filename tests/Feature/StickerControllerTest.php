@@ -176,7 +176,7 @@ class StickerControllerTest extends TestCase
         $categories = Category::factory(3)->create();
         $categoryIds = $categories->pluck('id')->toArray();
 
-        $response = $this->put("api/stickers/{$sticker->id}/categories/attach", ['category_ids' => $categoryIds]);
+        $response = $this->post("api/stickers/{$sticker->id}/categories/attach", ['category_ids' => $categoryIds]);
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -210,7 +210,7 @@ class StickerControllerTest extends TestCase
         $categoryIds = $categories->pluck('id')->toArray();
 
         // Detach categories from the sticker
-        $response = $this->put("api/stickers/{$sticker->id}/categories/detach", ['category_ids' => $categoryIds]);
+        $response = $this->delete("api/stickers/{$sticker->id}/categories/detach", ['category_ids' => $categoryIds]);
 
         $response->assertStatus(200)
             ->assertJsonStructure([

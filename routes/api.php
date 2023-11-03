@@ -51,9 +51,9 @@ Route::prefix('stickers')->group(
         // Route to get a list of all stickers by categoryId
         Route::get('/category/{categoryId}', [StickerController::class, 'getStickersByCategory']);
         // Route to attach categories to a sticker
-        Route::put('/{id}/categories/attach', [StickerController::class, 'attachCategoryToSticker']);
+        Route::post('/{id}/categories/attach', [StickerController::class, 'attachCategoryToSticker']);
         // Route to detach categories from a sticker
-        Route::put('/{id}/categories/detach', [StickerController::class, 'detachCategoryToSticker']);
+        Route::delete('/{id}/categories/detach', [StickerController::class, 'detachCategoryToSticker']);
         // Route to get a specific sticker by ID
         Route::get('/{id}', [StickerController::class, 'show']);
         // Route to create a new sticker
@@ -102,6 +102,10 @@ Route::prefix('roles')->group(
         Route::put('/{id}', [RoleController::class, 'update'])->middleware(['jwt_full', 'admin']);
         // Route to delete an existing role by ID
         Route::delete('/{id}', [RoleController::class, 'destroy'])->middleware(['jwt_full', 'admin']);
+        // Route attach a role to a user.
+        Route::post('/{roleId}/user/attach/{userId}', [RoleController::class, 'attachRoleToUser'])->middleware(['jwt_full', 'admin']);
+        // Route detach a role from a user.
+        Route::delete('/{roleId}/user/detach/{userId}', [RoleController::class, 'detachRoleOfUser'])->middleware(['jwt_full', 'admin']);
     }
 );
 

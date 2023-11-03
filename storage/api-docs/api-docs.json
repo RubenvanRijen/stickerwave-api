@@ -1701,6 +1701,176 @@
                 ]
             }
         },
+        "/roles/{roleId}/user/attach/{userId}": {
+            "post": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Attach a role to a user",
+                "description": "Associates a specific role with a user.",
+                "operationId": "dda555ea89f2c530d2718be831c277dd",
+                "parameters": [
+                    {
+                        "name": "roleId",
+                        "in": "path",
+                        "description": "ID of the role to attach",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "123"
+                        }
+                    },
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID of the user to whom the role will be attached",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "456"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role attached successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "description": "User data after attachment",
+                                            "properties": {
+                                                "id": {
+                                                    "description": "User ID",
+                                                    "type": "integer"
+                                                },
+                                                "name": {
+                                                    "description": "User's name",
+                                                    "type": "string"
+                                                },
+                                                "email": {
+                                                    "description": "User's email",
+                                                    "type": "string"
+                                                },
+                                                "email_verified_at": {
+                                                    "description": "Timestamp of email verification",
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Role or user not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "description": "Error message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/roles/{roleId}/user/detach/{userId}": {
+            "delete": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Detach a role from a user",
+                "description": "Removes a specific role from a user.",
+                "operationId": "c56eb5d9e697c40b94cc4b27cf3aec64",
+                "parameters": [
+                    {
+                        "name": "roleId",
+                        "in": "path",
+                        "description": "ID of the role to detach",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "123"
+                        }
+                    },
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID of the user from whom the role will be detached",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "456"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role detached successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "description": "User data after detachment",
+                                            "properties": {
+                                                "id": {
+                                                    "description": "User ID",
+                                                    "type": "integer"
+                                                },
+                                                "name": {
+                                                    "description": "User's name",
+                                                    "type": "string"
+                                                },
+                                                "email": {
+                                                    "description": "User's email",
+                                                    "type": "string"
+                                                },
+                                                "email_verified_at": {
+                                                    "description": "Timestamp of email verification",
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Role or user not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "description": "Error message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/stickers": {
             "get": {
                 "tags": [
@@ -2132,12 +2302,12 @@
             }
         },
         "/api/stickers/{stickerId}/categories/attach": {
-            "put": {
+            "post": {
                 "tags": [
                     "Stickers"
                 ],
                 "summary": "Attach categories to a sticker",
-                "operationId": "a7ce039bfd4c4962d5ff638b7599212d",
+                "operationId": "b013501352d699a96a240b43d613248e",
                 "parameters": [
                     {
                         "name": "stickerId",
@@ -2222,12 +2392,12 @@
             }
         },
         "/stickers/{stickerId}/categories/detach": {
-            "put": {
+            "delete": {
                 "tags": [
                     "Stickers"
                 ],
                 "summary": "Detach categories from a sticker",
-                "operationId": "1867b692e9aadbe71b278bdb1b7c9989",
+                "operationId": "8fdd9b0670da3fa32e870ae86dc336f8",
                 "parameters": [
                     {
                         "name": "stickerId",

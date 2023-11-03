@@ -253,7 +253,7 @@ interface StickerInterface
     public function getStickersByCategory(int $categoryId): JsonResponse;
 
     /**
-     * @OA\PUT(
+     * @OA\POST(
      *     path="/api/stickers/{stickerId}/categories/attach",
      *     summary="Attach categories to a sticker",
      *     tags={"Stickers"},
@@ -304,7 +304,7 @@ interface StickerInterface
     public function attachCategoryToSticker(Request $request, int $stickerId): JsonResponse;
 
     /**
-     * @OA\Put(
+     * @OA\Delete(
      *     path="/stickers/{stickerId}/categories/detach",
      *     summary="Detach categories from a sticker",
      *     tags={"Stickers"},
