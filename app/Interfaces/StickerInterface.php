@@ -244,7 +244,7 @@ interface StickerInterface
      *           )
      *         )
      *     ),
-     *     @OA\Response(
+     * @OA\Response(
      *         response=404,
      *         description="Category not found"
      *     )
@@ -353,4 +353,79 @@ interface StickerInterface
      * )
      */
     public function detachCategoryToSticker(Request $request, int $stickerId): JsonResponse;
+
+    /**
+     * @OA\Get(
+     *     path="/stickers/details",
+     *     tags={"Stickers"},
+     *     summary="Return all the data of the stickers with every info",
+     *     description="This function fetches all stickers with their associated images and categories data.",
+     *     operationId="indexDetails",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(type="array",
+     *           @OA\Items(type="object",
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="title", type="string", example="My Sticker"),
+     *             @OA\Property(property="description", type="string", example="Sticker Description"),
+     *             @OA\Property(property="price", type="number", format="float", example=10.99),
+     *             @OA\Property(property="image", type="object",
+     *                @OA\Property(property="id", type="integer", example=1),
+     *                @OA\Property(property="url", type="string", example="https://example.com/image.png")
+     *              ),
+     *             @OA\Property(property="categories", type="array",
+     *                @OA\Items(type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="Cars")
+     *                )
+     *              )
+     *           )
+     *         )
+     *     )
+     * )
+     */
+    public function indexDetails(): JsonResponse;
+
+    /**
+     * @OA\Get(
+     *     path="/stickers/details/{id}",
+     *     tags={"Stickers"},
+     *     summary="Retrieve a specific sticker with all the data",
+     *     description="This function fetches a specific sticker based on the provided id. Along with the sticker it fetches the associated image and categories data.",
+     *     operationId="showDetails",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(type="object",
+     *           @OA\Property(property="id", type="integer", example=1),
+     *           @OA\Property(property="title", type="string", example="My Sticker"),
+     *           @OA\Property(property="description", type="string", example="Sticker Description"),
+     *           @OA\Property(property="price", type="number", format="float", example=10.99),
+     *           @OA\Property(property="image", type="object",
+     *              @OA\Property(property="id", type="integer", example=1),
+     *              @OA\Property(property="url", type="string", example="https://example.com/image.png")
+     *            ),
+     *           @OA\Property(property="categories", type="array",
+     *              @OA\Items(type="object",
+     *               @OA\Property(property="id", type="integer", example=1),
+     *               @OA\Property(property="name", type="string", example="Cars")
+     *              )
+     *           )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Item not found"
+     *     )
+     * )
+     */
+    public function showDetails(mixed $id): JsonResponse;
+
 }

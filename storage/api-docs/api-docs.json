@@ -246,27 +246,24 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "id": {
-                                                "type": "integer"
-                                            },
-                                            "filename": {
-                                                "type": "string"
-                                            },
-                                            "mime": {
-                                                "type": "string"
-                                            },
-                                            "data": {
-                                                "type": "string"
-                                            },
-                                            "sticker_id": {
-                                                "type": "integer"
-                                            }
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
                                         },
-                                        "type": "object"
-                                    }
+                                        "filename": {
+                                            "type": "string"
+                                        },
+                                        "mime": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "string"
+                                        },
+                                        "sticker_id": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -2509,6 +2506,162 @@
                         "jwt_token": []
                     }
                 ]
+            }
+        },
+        "/stickers/details": {
+            "get": {
+                "tags": [
+                    "Stickers"
+                ],
+                "summary": "Return all the data of the stickers with every info",
+                "description": "This function fetches all stickers with their associated images and categories data.",
+                "operationId": "indexDetails",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "title": {
+                                                "type": "string",
+                                                "example": "My Sticker"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "Sticker Description"
+                                            },
+                                            "price": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 10.99
+                                            },
+                                            "image": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "url": {
+                                                        "type": "string",
+                                                        "example": "https://example.com/image.png"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "categories": {
+                                                "type": "array",
+                                                "items": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Cars"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/stickers/details/{id}": {
+            "get": {
+                "tags": [
+                    "Stickers"
+                ],
+                "summary": "Retrieve a specific sticker with all the data",
+                "description": "This function fetches a specific sticker based on the provided id. Along with the sticker it fetches the associated image and categories data.",
+                "operationId": "showDetails",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "My Sticker"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Sticker Description"
+                                        },
+                                        "price": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 10.99
+                                        },
+                                        "image": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "url": {
+                                                    "type": "string",
+                                                    "example": "https://example.com/image.png"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "categories": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Cars"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Item not found"
+                    }
+                }
             }
         },
         "/api/transactions": {

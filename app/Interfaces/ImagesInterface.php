@@ -31,15 +31,12 @@ interface ImagesInterface
      *         response=200,
      *         description="Image of the sticker",
      *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(
-     *                 type="object",
-     *                 @OA\Property(property="id", type="integer"),
-     *                 @OA\Property(property="filename", type="string"),
-     *                 @OA\Property(property="mime", type="string"),
-     *                 @OA\Property(property="data", type="string"),
-     *                 @OA\Property(property="sticker_id", type="integer")
-     *             )
+     *             type="object",
+     *             @OA\Property(property="id", type="integer"),
+     *             @OA\Property(property="filename", type="string"),
+     *             @OA\Property(property="mime", type="string"),
+     *             @OA\Property(property="data", type="string"),
+     *             @OA\Property(property="sticker_id", type="integer")
      *         )
      *     ),
      *     @OA\Response(

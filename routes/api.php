@@ -56,7 +56,7 @@ Route::prefix('stickers')->group(
         // Route to detach categories from a sticker
         Route::delete('/{id}/categories/detach', [StickerController::class, 'detachCategoryToSticker']);
         // Route to get a specific sticker by ID
-        Route::get('/{id}', [StickerController::class, 'show']);
+        Route::get('/{id}', [StickerController::class, 'show'])->where('id', '[0-9]+');
         // Route to create a new sticker
         Route::post('/', [StickerController::class, 'store'])->middleware(['jwt_full', 'admin']);
         // Route to update an existing sticker by ID
@@ -72,6 +72,12 @@ Route::prefix('stickers')->group(
         Route::put('/{stickerId}/images/{imageId}', [ImageController::class, 'update'])->middleware(['jwt_full', 'admin']);
         // Route to delete an existing image for a specific sticker by ID
         Route::delete('/{stickerId}/images/{imageId}', [ImageController::class, 'destroy'])->middleware(['jwt_full', 'admin']);
+
+
+        // get all the details of a list of sticker
+        Route::get('/details', [StickerController::class, 'indexDetails']);
+        // get all the details of a sticker
+        Route::get('/details/{id}', [StickerController::class, 'showDetails'])->where('id', '[0-9]+');
     }
 );
 

@@ -16,8 +16,13 @@ use Database\Seeders\RolesTableSeeder;
 
 class StickerControllerTest extends TestCase
 {
-    use RefreshDatabase; // Automatically reset the database after each test
-    use WithFaker;       // Use Faker for generating fake data
+    use RefreshDatabase;
+
+    // Automatically reset the database after each test
+
+    use WithFaker;
+
+    // Use Faker for generating fake data
     protected $headers = [];
 
     protected function setUp(): void
@@ -228,4 +233,93 @@ class StickerControllerTest extends TestCase
             ]);
         }
     }
+
+    /** @test */
+    public function showDetails_returns_sticker_details_if_sticker_exists()
+    {
+        $sticker = Sticker::factory()->create(); // Create a sticker for testing
+
+        // Call showDetails endpoint
+        $response = $this->getJson('api/stickers/details/' . $sticker->id);
+
+        // Assert the response status is 200 (OK) and the returned sticker's id is same as the created sticker's id
+        $response->assertStatus(200);
+        $response->assertJsonPath('id', $sticker->id);
+    }
+
+    /** @test */
+    public function showDetails_returns_404_if_sticker_does_not_exist()
+    {
+        $invalidStickerId = 999; // ID of a non-existent sticker
+
+        // Call showDetails endpoint
+        $response = $this->getJson('api/stickers/details/' . $invalidStickerId);
+
+        // Assert the response status is 404 (Not Found)
+        $response->assertStatus(404);
+    }
+
+    /** @test */
+    public function indexDetails_returns_all_stickers_with_details()
+    {
+        // Creating multiple stickers using factory for testing
+        $stickers = Sticker::factory()->count(3)->create();
+
+        // Call indexDetails endpoint
+        $response = $this->getJson('api/stickers/details');
+
+        // Assert the response status is 200 (OK)
+        $response->assertStatus(200);
+
+        // Assert the returned data is paginated
+        $response->assertJsonStructure([
+            'data' => [
+                'current_page',
+                'data' => [
+                    '*' => [
+                        'id',
+                        'title',
+                        'description',
+                        'price',
+                        'created_at',
+                        'updated_at',
+                        'image',
+                        'categories'
+                    ]
+                ],
+                'first_page_url',
+                'from',
+                'last_page',
+                'last_page_url',
+                'links' => [
+                    '*' => [
+                        'url',
+                        'label',
+                        'active'
+                    ]
+                ],
+                'next_page_url',
+                'path',
+                'per_page',
+                'prev_page_url',
+                'to',
+                'total'
+            ]
+        ]);
+    }
+
+    /** @test */
+    public function indexDetails_returns_empty_results_when_no_stickers_exist()
+    {
+        // Call indexDetails endpoint
+        $response = $this->getJson('api/stickers/details');
+
+        // Assert the response status is 200 (OK)
+        $response->assertStatus(200);
+
+        // Assert returned data is an empty array
+        $response->assertJson(['data' => []]);
+    }
+
+
 }
